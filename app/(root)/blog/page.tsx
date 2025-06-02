@@ -5,9 +5,9 @@ import { Plus } from "lucide-react";
 import PageWrapper from "@/components/layout/page-wrapper";
 import FadeInWhenVisible from "@/components/general/fadeIn-when-visible";
 import { fadeInLeft, fadeInUp } from "@/utils/animations";
-import { getAllCategories, getBlogPosts } from "../actions/blogpost";
-import BlogPostCard from "../../components/blog/blog-post-card2";
 import { removeSpecialChars } from "@/lib/utils";
+import { getAllCategories, getBlogPosts } from "@/app/actions/blogpost";
+import BlogPostCard from "@/components/blog/blog-post-card2";
 // import { getBlogPosts } from "@/app/actions";
 // import BlogPostCard from "@/components/blog/blog-post-card";
 

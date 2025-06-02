@@ -11,8 +11,7 @@ import PageWrapper from "@/components/layout/page-wrapper";
 import FadeInWhenVisible from "@/components/general/fadeIn-when-visible";
 import { fadeInUp, fadeInLeft } from "@/utils/animations";
 import { getPostBySlug } from "@/app/actions/blogpost";
-import { ShareButton } from "@/app/components/blog/slug/share-button";
-// import { ShareButton } from "@/components/blog/ShareButton";
+import { ShareButton } from "@/components/blog/slug/share-button";
 
 interface BlogPost {
   id: string;
