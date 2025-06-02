@@ -1,0 +1,390 @@
+/* code.css - Prism.js styling with proper light/dark mode support */
+
+/* Base code block styling */
+pre[class*="language-"] {
+  position: relative;
+  margin: 1rem 0;
+  padding: 1rem;
+  padding-top: 2.5rem; /* Make room for language label */
+  overflow-x: auto;
+  font-size: 0.875rem;
+  line-height: 1.6;
+  border-radius: 0.5rem;
+  border: 1px solid hsl(var(--border));
+  font-family: ui-monospace, "SF Mono", "Monaco", "Inconsolata", "Roboto Mono",
+    "Consolas", monospace;
+}
+
+code[class*="language-"] {
+  font-family: ui-monospace, "SF Mono", "Monaco", "Inconsolata", "Roboto Mono",
+    "Consolas", monospace;
+  font-size: 0.875rem;
+}
+
+/* Light mode styles - default */
+pre[class*="language-"] {
+  background: #fafafa !important;
+  color: #383a42;
+}
+
+code[class*="language-"] {
+  color: #383a42;
+}
+
+/* Light mode syntax highlighting */
+.token.comment,
+.token.prolog,
+.token.doctype,
+.token.cdata {
+  color: #a0a1a7;
+  font-style: italic;
+}
+
+.token.punctuation {
+  color: #383a42;
+}
+
+.token.property,
+.token.tag,
+.token.boolean,
+.token.number,
+.token.constant,
+.token.symbol,
+.token.deleted {
+  color: #e45649;
+}
+
+.token.selector,
+.token.attr-name,
+.token.string,
+.token.char,
+.token.builtin,
+.token.inserted {
+  color: #50a14f;
+}
+
+.token.operator,
+.token.entity,
+.token.url,
+.language-css .token.string,
+.style .token.string {
+  color: #0184bb;
+}
+
+.token.atrule,
+.token.attr-value,
+.token.keyword {
+  color: #a626a4;
+}
+
+.token.function,
+.token.class-name {
+  color: #c18401;
+}
+
+.token.regex,
+.token.important,
+.token.variable {
+  color: #e45649;
+}
+
+/* Dark mode styles - applied when .dark class is present */
+.dark pre[class*="language-"] {
+  background: #2d3748 !important;
+  color: #c5c8c6;
+  border-color: hsl(var(--border));
+}
+
+.dark code[class*="language-"] {
+  color: #c5c8c6;
+}
+
+/* Dark mode syntax highlighting - Tomorrow Night theme colors */
+.dark .token.comment,
+.dark .token.prolog,
+.dark .token.doctype,
+.dark .token.cdata {
+  color: #969896;
+  font-style: italic;
+}
+
+.dark .token.punctuation {
+  color: #c5c8c6;
+}
+
+.dark .token.property,
+.dark .token.tag,
+.dark .token.boolean,
+.dark .token.number,
+.dark .token.constant,
+.dark .token.symbol,
+.dark .token.deleted {
+  color: #cc6666;
+}
+
+.dark .token.selector,
+.dark .token.attr-name,
+.dark .token.string,
+.dark .token.char,
+.dark .token.builtin,
+.dark .token.inserted {
+  color: #b5bd68;
+}
+
+.dark .token.operator,
+.dark .token.entity,
+.dark .token.url,
+.dark .language-css .token.string,
+.dark .style .token.string {
+  color: #8abeb7;
+}
+
+.dark .token.atrule,
+.dark .token.attr-value,
+.dark .token.keyword {
+  color: #b294bb;
+}
+
+.dark .token.function,
+.dark .token.class-name {
+  color: #f0c674;
+}
+
+.dark .token.regex,
+.dark .token.important,
+.dark .token.variable {
+  color: #de935f;
+}
+
+/* Enhanced scrollbar styling */
+pre[class*="language-"]::-webkit-scrollbar {
+  height: 8px;
+}
+
+pre[class*="language-"]::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+pre[class*="language-"]::-webkit-scrollbar-thumb {
+  background: hsl(var(--muted-foreground) / 0.3);
+  border-radius: 4px;
+}
+
+pre[class*="language-"]::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--muted-foreground) / 0.5);
+}
+
+.dark pre[class*="language-"]::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.dark pre[class*="language-"]::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+/* Inline code styling */
+:not(pre) > code {
+  background: hsl(var(--muted));
+  color: hsl(var(--foreground));
+  padding: 0.125rem 0.25rem;
+  border-radius: 0.25rem;
+  font-size: 0.875em;
+  font-family: ui-monospace, "SF Mono", "Monaco", "Inconsolata", "Roboto Mono",
+    "Consolas", monospace;
+}
+
+/* Language label styling */
+pre[class*="language-"]::before {
+  content: attr(data-language);
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 0.25rem 0.75rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.025em;
+  border-bottom-left-radius: 0.375rem;
+  border-top-right-radius: 0.375rem;
+  font-family: ui-sans-serif, system-ui, -apple-system, sans-serif;
+}
+
+/* Language-specific labels and colors */
+pre.language-javascript::before {
+  content: "JavaScript";
+  background: #f7df1e;
+  color: #000;
+}
+pre.language-typescript::before {
+  content: "TypeScript";
+  background: #3178c6;
+  color: #fff;
+}
+pre.language-jsx::before {
+  content: "JSX";
+  background: #61dafb;
+  color: #000;
+}
+pre.language-tsx::before {
+  content: "TSX";
+  background: #3178c6;
+  color: #fff;
+}
+pre.language-css::before {
+  content: "CSS";
+  background: #1572b6;
+  color: #fff;
+}
+pre.language-scss::before {
+  content: "SCSS";
+  background: #cf649a;
+  color: #fff;
+}
+pre.language-html::before {
+  content: "HTML";
+  background: #e34f26;
+  color: #fff;
+}
+pre.language-json::before {
+  content: "JSON";
+  background: #000;
+  color: #fff;
+}
+pre.language-python::before {
+  content: "Python";
+  background: #3776ab;
+  color: #fff;
+}
+pre.language-java::before {
+  content: "Java";
+  background: #ed8b00;
+  color: #fff;
+}
+pre.language-bash::before,
+pre.language-shell::before {
+  content: "Bash";
+  background: #4eaa25;
+  color: #fff;
+}
+pre.language-sql::before {
+  content: "SQL";
+  background: #336791;
+  color: #fff;
+}
+pre.language-yaml::before,
+pre.language-yml::before {
+  content: "YAML";
+  background: #cb171e;
+  color: #fff;
+}
+pre.language-markdown::before,
+pre.language-md::before {
+  content: "Markdown";
+  background: #083fa1;
+  color: #fff;
+}
+pre.language-php::before {
+  content: "PHP";
+  background: #777bb4;
+  color: #fff;
+}
+pre.language-ruby::before {
+  content: "Ruby";
+  background: #cc342d;
+  color: #fff;
+}
+pre.language-go::before {
+  content: "Go";
+  background: #00add8;
+  color: #fff;
+}
+pre.language-rust::before {
+  content: "Rust";
+  background: #000;
+  color: #fff;
+}
+pre.language-swift::before {
+  content: "Swift";
+  background: #fa7343;
+  color: #fff;
+}
+pre.language-kotlin::before {
+  content: "Kotlin";
+  background: #7f52ff;
+  color: #fff;
+}
+pre.language-dart::before {
+  content: "Dart";
+  background: #0175c2;
+  color: #fff;
+}
+pre.language-c::before {
+  content: "C";
+  background: #a8b9cc;
+  color: #000;
+}
+pre.language-cpp::before {
+  content: "C++";
+  background: #00599c;
+  color: #fff;
+}
+pre.language-csharp::before {
+  content: "C#";
+  background: #239120;
+  color: #fff;
+}
+
+/* Fallback for unknown languages */
+pre[class*="language-"]:not([class*="language-javascript"]):not(
+    [class*="language-typescript"]
+  ):not([class*="language-jsx"]):not([class*="language-tsx"]):not(
+    [class*="language-css"]
+  ):not([class*="language-scss"]):not([class*="language-html"]):not(
+    [class*="language-json"]
+  ):not([class*="language-python"]):not([class*="language-java"]):not(
+    [class*="language-bash"]
+  ):not([class*="language-shell"]):not([class*="language-sql"]):not(
+    [class*="language-yaml"]
+  ):not([class*="language-yml"]):not([class*="language-markdown"]):not(
+    [class*="language-md"]
+  ):not([class*="language-php"]):not([class*="language-ruby"]):not(
+    [class*="language-go"]
+  ):not([class*="language-rust"]):not([class*="language-swift"]):not(
+    [class*="language-kotlin"]
+  ):not([class*="language-dart"]):not([class*="language-c"]):not(
+    [class*="language-cpp"]
+  ):not([class*="language-csharp"])::before {
+  content: "Code";
+  background: hsl(var(--muted));
+  color: hsl(var(--muted-foreground));
+}
+
+/* Dark mode adjustments for language labels */
+.dark pre.language-javascript::before {
+  background: #f7df1e;
+  color: #000;
+}
+.dark pre.language-json::before {
+  background: #fff;
+  color: #000;
+}
+.dark pre.language-c::before {
+  background: #a8b9cc;
+  color: #000;
+}
+.dark pre.language-rust::before {
+  background: #fff;
+  color: #000;
+}
+
+/* Line highlighting (for future use) */
+.line-highlight {
+  background: hsl(var(--accent) / 0.1);
+  border-left: 3px solid hsl(var(--primary));
+  margin-left: -1rem;
+  padding-left: calc(1rem - 3px);
+}
+
+.dark .line-highlight {
+  background: rgba(255, 255, 255, 0.05);
+}
