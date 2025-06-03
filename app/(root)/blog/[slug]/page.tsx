@@ -6,12 +6,12 @@ import Link from "next/link";
 import Image from "next/image";
 import { Calendar, Clock, User, ArrowLeft, BookOpen } from "lucide-react";
 import type { Metadata } from "next";
-import { MDXRemote } from "next-mdx-remote/rsc";
 import PageWrapper from "@/components/layout/page-wrapper";
 import FadeInWhenVisible from "@/components/general/fadeIn-when-visible";
 import { fadeInUp, fadeInLeft } from "@/utils/animations";
 import { getPostBySlug } from "@/app/actions/blogpost";
 import { ShareButton } from "@/components/blog/slug/share-button";
+import Article from "@/components/blog/slug/article";
 
 interface BlogPost {
   id: string;
@@ -183,13 +183,7 @@ export default async function BlogPostPage({ params }: Props) {
           </FadeInWhenVisible>
 
           {/* Article Content */}
-          <FadeInWhenVisible variants={fadeInUp}>
-            <div className="prose prose-lg prose-blue dark:prose-invert max-w-none">
-              <div className="bg-card/30 backdrop-blur-sm rounded-xl p-8 md:p-12 border">
-                <MDXRemote source={post.content} />
-              </div>
-            </div>
-          </FadeInWhenVisible>
+          <Article content={post.content} />
 
           {/* Tags */}
           {post.tags && post.tags.length > 0 && (

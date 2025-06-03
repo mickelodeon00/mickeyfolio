@@ -1,3 +1,4 @@
+"use client";
 import Prism from "prismjs";
 import MarkdownIt from "markdown-it";
 import DOMPurify from "dompurify";

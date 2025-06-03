@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-// import { supabase } from "@/lib/supabase/client"
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -12,7 +11,6 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-// import type { BlogPost } from "@/types/blog"
 import { useToast } from "@/hooks/use-toast";
 import Link from "next/link";
 import { Check, Pencil, Plus, Trash2, X } from "lucide-react";

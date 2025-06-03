@@ -9,7 +9,7 @@ export default function MarkdownEditor({
 }) {
   return (
     <Textarea
-      className="min-h-[400px] font-mono"
+      className="h-full font-mono p-4 border rounded-md "
       value={content}
       onChange={(e) => setContent(e.target.value)}
       placeholder="Write in Markdown..."

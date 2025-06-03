@@ -22,7 +22,7 @@ import {
   FormMessage,
 } from "../ui/form";
 import Tiptap from "../editor/tiptap";
-import Preview from "../editor/preview";
+import Preview from "../editor/preview2";
 import MarkdownEditor from "../editor/markdown-editor";
 import { createBlogPost } from "@/app/actions/blogpost";
 
@@ -40,17 +40,20 @@ interface PostEditorProps {
 
 // Zod Schema
 const postSchema = z.object({
-  title: z.string(),
-  // .min(1, "Title is required")
-  // .min(3, "Title must be at least 3 characters")
-  // .max(200, "Title must be less than 200 characters"),
-  excerpt: z.string(),
-  // .min(1, "Excerpt is required")
-  // .min(10, "Excerpt must be at least 10 characters")
-  // .max(500, "Excerpt must be less than 500 characters"),
-  content: z.string(),
-  // .min(1, "Content is required")
-  // .min(50, "Content must be at least 50 characters"),
+  title: z
+    .string()
+    .min(1, "Title is required")
+    .min(3, "Title must be at least 3 characters")
+    .max(200, "Title must be less than 200 characters"),
+  excerpt: z
+    .string()
+    .min(1, "Excerpt is required")
+    .min(10, "Excerpt must be at least 10 characters")
+    .max(500, "Excerpt must be less than 500 characters"),
+  content: z
+    .string()
+    .min(1, "Content is required")
+    .min(50, "Content must be at least 50 characters"),
   featuredImage: z
     .string()
     .optional()
@@ -343,21 +346,19 @@ export default function PostEditor({ categories, userId }: PostEditorProps) {
                       </TabsTrigger>
                     </TabsList>
 
-                    <div className="border rounded-lg overflow-hidden">
-                      <TabsContent value="edit" className="m-0">
+                    <div className="border rounded-lg overflow-y-auto ">
+                      <TabsContent value="edit" className="m-0 h-[600px] ">
                         <Tiptap
                           content={watchedContent}
                           setContent={handleContentChange}
                         />
                       </TabsContent>
 
-                      <TabsContent value="preview" className="m-0">
-                        {/* <div className="p-6 min-h-[400px] bg-muted/30"> */}
+                      <TabsContent value="preview" className="m-0 h-[500px] ">
                         <Preview markdown={watchedContent} />
-                        {/* </div> */}
                       </TabsContent>
 
-                      <TabsContent value="markdown" className="m-0">
+                      <TabsContent value="markdown" className="m-0 h-[500px] ">
                         <MarkdownEditor
                           content={watchedContent}
                           setContent={handleContentChange}

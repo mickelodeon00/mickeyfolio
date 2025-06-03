@@ -1,0 +1,64 @@
+/* Table styling */
+.table-wrapper {
+  margin: 1rem 0;
+  overflow-x: auto;
+}
+
+table {
+  border-collapse: collapse;
+  table-layout: fixed;
+  width: 100%;
+  margin: 0;
+  overflow: hidden;
+  background-color: var(--background);
+}
+
+.table-header {
+  background-color: hsl(var(--muted));
+  font-weight: 600;
+  text-align: left;
+  color: hsl(var(--foreground));
+}
+
+.table-cell,
+.table-header {
+  border: 1px solid hsl(var(--border));
+  padding: 0.5rem 1rem;
+  min-width: 100px;
+  vertical-align: top;
+  color: hsl(var(--foreground));
+}
+
+.table-cell p {
+  margin: 0;
+}
+
+.table-row:hover .table-cell {
+  background-color: hsl(var(--accent) / 0.1);
+}
+
+/* Alternate row coloring */
+.table-row:nth-child(even) .table-cell {
+  background-color: hsl(var(--muted) / 0.3);
+}
+
+.table-row:last-child .table-cell {
+  border-bottom-width: 1px;
+}
+
+/* For dark mode support */
+@media (prefers-color-scheme: dark) {
+  .table-header {
+    background-color: hsl(var(--muted));
+    color: hsl(var(--foreground));
+  }
+
+  .table-cell,
+  .table-header {
+    border-color: hsl(var(--border));
+  }
+
+  .table-row:nth-child(even) .table-cell {
+    background-color: hsl(var(--muted) / 0.5);
+  }
+}

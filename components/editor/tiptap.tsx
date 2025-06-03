@@ -3,15 +3,19 @@
 import { useEditor, EditorContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import Highlight from "@tiptap/extension-highlight";
+import Image from "@tiptap/extension-image";
+
 import Menubar from "./menubar";
 import TextAlign from "@tiptap/extension-text-align";
 import { useEffect } from "react";
-import CodeBlockLowlight from "@tiptap/extension-code-block-lowlight";
-import { createLowlight, common } from "lowlight";
 import MarkdownIt from "markdown-it";
 import { createEnhancedTurndown } from "./utils";
-import "./code.css";
 import { CodeBlockWithLanguage } from "./codeblock";
+import { CustomImage } from "./imageblock";
+import { CustomTable, TableRow, TableHeader, TableCell } from "./table";
+
+import "./styles/code.css";
+import "./styles/table.css";
 
 // Usage in your component:
 const turndownService = createEnhancedTurndown();
@@ -24,8 +28,6 @@ interface Props {
 }
 
 const Tiptap = ({ content, setContent }: Props) => {
-  const lowlight = createLowlight(common);
-
   const editor = useEditor({
     extensions: [
       StarterKit.configure({
@@ -42,20 +44,17 @@ const Tiptap = ({ content, setContent }: Props) => {
         codeBlock: false, // Disable default code block to use CodeBlockLowlight instead
       }),
       Highlight,
+      CustomImage,
+      CodeBlockWithLanguage,
       TextAlign.configure({
         types: ["heading", "paragraph"],
       }),
-      // CodeBlockLowlight.configure({
-      //   lowlight,
-      //   defaultLanguage: "javascript",
-      //   languageClassPrefix: "language-",
-      //   HTMLAttributes: {
-      //     class: "rounded-md bg-muted p-4 font-mono text-sm code-block",
-      //     SpellCheck: "false", // Disable spell check for code blocks
-      //   },
-      // }),
-      CodeBlockWithLanguage,
-      // codeBlock,
+      CustomTable.configure({
+        resizable: true,
+      }),
+      TableRow,
+      TableHeader,
+      TableCell,
     ],
     content: md.render(content || ""),
     onUpdate: ({ editor }) => {
@@ -70,6 +69,7 @@ const Tiptap = ({ content, setContent }: Props) => {
           "h-[400px] w-full overflow-y-auto p-4 rounded-md bg-background text-foreground border border-input ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
       },
     },
+    immediatelyRender: false, // Prevents immediate rendering on every keystroke
   });
   // Re-sync editor if content changes from markdown tab
   useEffect(() => {

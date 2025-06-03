@@ -1,12 +1,7 @@
-// components/editor/preview.tsx
 "use client";
 
 import { useEffect, useState } from "react";
 import MarkdownIt from "markdown-it";
-// import "./prismcustom.css"; // Add this line
-// We'll import DOMPurify dynamically in useEffect
-
-// Import Prism only on client side
 let Prism: any = null;
 if (typeof window !== "undefined") {
   Prism = require("prismjs");
@@ -69,21 +64,21 @@ export default function Preview({ markdown }: PreviewProps) {
         linkify: true,
         typographer: true,
         highlight: function (str, lang) {
-          console.log("🔍 Highlighting:", {
-            lang,
-            codeLength: str.length,
-            code: str.substring(0, 50) + "...",
-          });
+          // console.log("🔍 Highlighting:", {
+          //   lang,
+          //   codeLength: str.length,
+          //   code: str.substring(0, 50) + "...",
+          // });
 
           if (!Prism) {
-            console.log("❌ Prism not loaded");
+            // console.log("❌ Prism not loaded");
             return `<pre class="language-${lang || "text"}"><code>${escapeHtml(
               str
             )}</code></pre>`;
           }
 
           const normalizedLang = languageMap[lang] || lang;
-          console.log("🔄 Normalized language:", normalizedLang);
+          // console.log("🔄 Normalized language:", normalizedLang);
 
           if (normalizedLang && Prism.languages[normalizedLang]) {
             try {
@@ -92,17 +87,17 @@ export default function Preview({ markdown }: PreviewProps) {
                 Prism.languages[normalizedLang],
                 normalizedLang
               );
-              console.log("✅ Successfully highlighted with Prism");
+              // console.log("✅ Successfully highlighted with Prism");
               return `<pre class="language-${normalizedLang}"><code class="language-${normalizedLang}">${highlighted}</code></pre>`;
             } catch (error) {
-              console.error("❌ Prism highlighting error:", error);
+              // console.error("❌ Prism highlighting error:", error);
             }
           } else {
-            console.log("⚠️ Language not supported:", normalizedLang);
-            console.log(
-              "📋 Available languages:",
-              Object.keys(Prism.languages || {})
-            );
+            // console.log("⚠️ Language not supported:", normalizedLang);
+            // console.log(
+            //   "📋 Available languages:",
+            //   Object.keys(Prism.languages || {})
+            // );
           }
 
           // Fallback for unsupported languages
@@ -115,7 +110,7 @@ export default function Preview({ markdown }: PreviewProps) {
       });
 
       const html = md.render(markdown);
-      console.log("📄 Rendered HTML:", html);
+      // console.log("📄 Rendered HTML:", html);
 
       // Use DOMPurify if available, otherwise use the HTML directly
       if (DOMPurify) {
@@ -147,7 +142,7 @@ export default function Preview({ markdown }: PreviewProps) {
     if (isClient && highlightedHtml && Prism) {
       // Small delay to ensure DOM is updated
       setTimeout(() => {
-        console.log("🎨 Running Prism.highlightAll()");
+        // console.log("🎨 Running Prism.highlightAll()");
         Prism.highlightAll();
       }, 100);
     }
@@ -172,22 +167,11 @@ export default function Preview({ markdown }: PreviewProps) {
   }
 
   return (
-    <div className="min-h-[400px] p-4 border rounded-md prose dark:prose-invert max-w-none">
+    <div className="h-full p-4 border rounded-md prose dark:prose-invert max-w-none">
       <div
         dangerouslySetInnerHTML={{ __html: highlightedHtml }}
         className="prism-preview"
       />
-
-      {/* Debug info - remove in production */}
-      <div className="mt-4 p-2 bg-gray-100 dark:bg-gray-800 rounded text-xs">
-        <p>🔧 Debug Info:</p>
-        <p>Client loaded: {isClient ? "✅" : "❌"}</p>
-        <p>Prism loaded: {Prism ? "✅" : "❌"}</p>
-        <p>
-          Available languages:{" "}
-          {Prism ? Object.keys(Prism.languages).join(", ") : "None"}
-        </p>
-      </div>
     </div>
   );
 }

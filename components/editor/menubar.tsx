@@ -16,6 +16,16 @@ import {
   List,
   ListOrdered,
   Code,
+  ImageIcon,
+  Table,
+  Plus,
+  Minus,
+  Merge,
+  Split,
+  TableProperties,
+  Trash2,
+  ToggleLeft,
+  ToggleRight,
 } from "lucide-react";
 import { Editor } from "@tiptap/react";
 import { Toggle } from "../ui/toggle";
@@ -83,6 +93,126 @@ const Menubar = ({ editor }: Prop) => {
   const insertCodeBlockWithLanguage = (language: string) => {
     editor.chain().focus().setCodeBlock({ language }).run();
   };
+
+  const tableOptions = [
+    {
+      icon: <Table className="size-4" />,
+      onClick: () =>
+        editor
+          .chain()
+          .focus()
+          .insertTable({ rows: 3, cols: 3, withHeaderRow: true })
+          .run(),
+      isActive: () => editor.isActive("table"),
+      label: "Insert Table",
+    },
+    // Table-specific options (only show when table is active)
+    ...(editor.isActive("table")
+      ? [
+          {
+            icon: <Plus className="size-4" />,
+            onClick: () => editor.chain().focus().addColumnBefore().run(),
+            isActive: () => false,
+            label: "Add Column Before",
+          },
+          {
+            icon: <Plus className="size-4" />,
+            onClick: () => editor.chain().focus().addColumnAfter().run(),
+            isActive: () => false,
+            label: "Add Column After",
+          },
+          {
+            icon: <Minus className="size-4" />,
+            onClick: () => editor.chain().focus().deleteColumn().run(),
+            isActive: () => false,
+            label: "Delete Column",
+          },
+          {
+            icon: <Plus className="size-4" />,
+            onClick: () => editor.chain().focus().addRowBefore().run(),
+            isActive: () => false,
+            label: "Add Row Before",
+          },
+          {
+            icon: <Plus className="size-4" />,
+            onClick: () => editor.chain().focus().addRowAfter().run(),
+            isActive: () => false,
+            label: "Add Row After",
+          },
+          {
+            icon: <Minus className="size-4" />,
+            onClick: () => editor.chain().focus().deleteRow().run(),
+            isActive: () => false,
+            label: "Delete Row",
+          },
+          {
+            icon: <Merge className="size-4" />,
+            onClick: () => editor.chain().focus().mergeCells().run(),
+            isActive: () => false,
+            label: "Merge Cells",
+          },
+          {
+            icon: <Split className="size-4" />,
+            onClick: () => editor.chain().focus().splitCell().run(),
+            isActive: () => false,
+            label: "Split Cell",
+          },
+          {
+            icon: <TableProperties className="size-4" />,
+            onClick: () => editor.chain().focus().toggleHeaderRow().run(),
+            isActive: () => false,
+            label: "Toggle Header Row",
+          },
+          {
+            icon: <TableProperties className="size-4" />,
+            onClick: () => editor.chain().focus().toggleHeaderColumn().run(),
+            isActive: () => false,
+            label: "Toggle Header Column",
+          },
+          {
+            icon: <Trash2 className="size-4" />,
+            onClick: () => editor.chain().focus().deleteTable().run(),
+            isActive: () => false,
+            label: "Delete Table",
+          },
+        ]
+      : []),
+  ];
+
+  const tableMenubarOptions = [
+    {
+      icon: <Table className="size-4" />,
+      onClick: () =>
+        editor
+          .chain()
+          .focus()
+          .insertTable({ rows: 3, cols: 3, withHeaderRow: true })
+          .run(),
+      isActive: () => editor.isActive("table"),
+      label: "Insert Table",
+    },
+    {
+      icon: <Plus className="size-4" />,
+      onClick: () => editor.chain().focus().addColumnAfter().run(),
+      isActive: () => false,
+      label: "Add Column",
+      isDisabled: () => !editor.isActive("table"),
+    },
+    {
+      icon: <Plus className="size-4" />,
+      onClick: () => editor.chain().focus().addRowAfter().run(),
+      isActive: () => false,
+      label: "Add Row",
+      isDisabled: () => !editor.isActive("table"),
+    },
+    {
+      icon: <Trash2 className="size-4" />,
+      onClick: () => editor.chain().focus().deleteTable().run(),
+      isActive: () => false,
+      label: "Delete Table",
+      isDisabled: () => !editor.isActive("table"),
+    },
+  ];
 
   const options = [
     {
@@ -175,6 +305,120 @@ const Menubar = ({ editor }: Prop) => {
       isActive: () => editor.isActive("codeBlock"),
       label: "Code Block",
     },
+    {
+      icon: <ImageIcon className="size-4" />,
+      onClick: () => {
+        const url = window.prompt("Enter image URL");
+        if (url) {
+          editor.chain().focus().setImage({ src: url }).run();
+        }
+      },
+      isActive: () => editor.isActive("image"),
+      label: "Insert Image",
+    },
+    // Table options
+
+    {
+      icon: <Table className="size-4" />,
+      onClick: () =>
+        editor
+          .chain()
+          .focus()
+          .insertTable({ rows: 3, cols: 3, withHeaderRow: true })
+          .run(),
+      isActive: () => editor.isActive("table"),
+      label: "Insert Table",
+    },
+    {
+      icon: <Plus className="size-4" />,
+      onClick: () => editor.chain().focus().addColumnAfter().run(),
+      isActive: () => false,
+      label: "Add Column",
+      isDisabled: () => !editor.isActive("table"),
+      className: () =>
+        !editor.isActive("table") ? "opacity-50 pointer-events-none" : "",
+    },
+    {
+      icon: <Plus className="size-4" />,
+      onClick: () => editor.chain().focus().addRowAfter().run(),
+      isActive: () => false,
+      label: "Add Row",
+      isDisabled: () => !editor.isActive("table"),
+      className: () =>
+        !editor.isActive("table") ? "opacity-50 pointer-events-none" : "",
+    },
+    {
+      icon: <Minus className="size-4" />,
+      onClick: () => editor.chain().focus().deleteColumn().run(),
+      isActive: () => false,
+      label: "Delete Column",
+      isDisabled: () => !editor.isActive("table"),
+      className: () =>
+        !editor.isActive("table") ? "opacity-50 pointer-events-none" : "",
+    },
+    {
+      icon: <Minus className="size-4" />,
+      onClick: () => editor.chain().focus().deleteRow().run(),
+      isActive: () => false,
+      label: "Delete Row",
+      isDisabled: () => !editor.isActive("table"),
+      className: () =>
+        !editor.isActive("table") ? "opacity-50 pointer-events-none" : "",
+    },
+    {
+      icon: <Trash2 className="size-4" />,
+      onClick: () => editor.chain().focus().deleteTable().run(),
+      isActive: () => false,
+      label: "Delete Table",
+      isDisabled: () => !editor.isActive("table"),
+      className: () =>
+        !editor.isActive("table") ? "opacity-50 pointer-events-none" : "",
+    },
+    {
+      icon: <Merge className="size-4" />,
+      onClick: () => editor.chain().focus().mergeCells().run(),
+      isActive: () => false,
+      label: "Merge Cells",
+      isDisabled: () => !editor.isActive("table"),
+      className: () =>
+        !editor.isActive("table") ? "opacity-50 pointer-events-none" : "",
+    },
+    {
+      icon: <Split className="size-4" />,
+      onClick: () => editor.chain().focus().splitCell().run(),
+      isActive: () => false,
+      label: "Split Cell",
+      isDisabled: () => !editor.isActive("table"),
+      className: () =>
+        !editor.isActive("table") ? "opacity-50 pointer-events-none" : "",
+    },
+    {
+      icon: <ToggleLeft className="size-4" />,
+      onClick: () => editor.chain().focus().toggleHeaderColumn().run(),
+      isActive: () => false,
+      label: "Toggle Header Column",
+      isDisabled: () => !editor.isActive("table"),
+      className: () =>
+        !editor.isActive("table") ? "opacity-50 pointer-events-none" : "",
+    },
+    {
+      icon: <ToggleRight className="size-4" />,
+      onClick: () => editor.chain().focus().toggleHeaderRow().run(),
+      isActive: () => false,
+      label: "Toggle Header Row",
+      isDisabled: () => !editor.isActive("table"),
+      className: () =>
+        !editor.isActive("table") ? "opacity-50 pointer-events-none" : "",
+    },
+    {
+      icon: <ToggleRight className="size-4" />,
+      onClick: () => editor.chain().focus().toggleHeaderCell().run(),
+      isActive: () => false,
+      label: "Toggle Header Cell",
+      isDisabled: () => !editor.isActive("table"),
+      className: () =>
+        !editor.isActive("table") ? "opacity-50 pointer-events-none" : "",
+    },
   ];
 
   return (
@@ -222,21 +466,24 @@ const Menubar = ({ editor }: Prop) => {
       </div>
 
       <TooltipProvider>
-        <div className="flex gap-2">
+        <div className="flex gap-2 w-full flex-wrap">
           {options.map((option, index) => (
             <Tooltip key={index}>
               <TooltipTrigger
+                asChild
                 onClick={(e) => {
                   e.preventDefault();
                   e.stopPropagation();
                 }}
               >
-                <Toggle
-                  pressed={option.isActive()}
-                  onPressedChange={option.onClick}
-                >
-                  {option.icon}
-                </Toggle>
+                <div>
+                  <Toggle
+                    pressed={option.isActive()}
+                    onPressedChange={option.onClick}
+                  >
+                    {option.icon}
+                  </Toggle>
+                </div>
               </TooltipTrigger>
               <TooltipContent side="top">
                 <p>{option.label}</p>
