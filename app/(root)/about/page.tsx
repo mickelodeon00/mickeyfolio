@@ -49,8 +49,13 @@ export default function AboutPage() {
               <div className="flex-1 text-center md:text-left">
                 <h1 className="text-4xl font-bold mb-4">About Me</h1>
                 <p className="text-xl text-muted-foreground mb-6">
-                  As an art-loving movie buff, music aficionado, chess
-                  enthusiast, and avid learner, I thrive as a programmer.
+                  I'm a web developer with a hacker's curiosity and an artist's
+                  eye, turning ideas into sleek, functional code. Off-duty, I
+                  dive into spy thrillers, military dramas, and chess strategy,
+                  gaming with grandmaster focus. Music fuels my
+                  creativity—whether debugging code or plotting my next move. A
+                  lifelong learner, I thrive where logic meets imagination: in
+                  code, cinema, and the perfect soundtrack.
                 </p>
 
                 <div className="flex flex-wrap gap-4 justify-center md:justify-start">

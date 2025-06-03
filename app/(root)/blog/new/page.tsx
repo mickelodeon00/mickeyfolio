@@ -2,6 +2,7 @@ import PostEditor from "@/components/blog/post-editor";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import PageWrapper from "@/components/layout/page-wrapper";
+import { getAllCategories } from "@/app/actions/blogpost";
 
 export const metadata = {
   title: "Create New Blog Post | Micheal",
@@ -10,14 +11,14 @@ export const metadata = {
 
 export default async function NewBlogPage() {
   // In a real app, this would fetch from Supabase
-  const categories = [
-    { id: "1", name: "Web Development", slug: "web-development" },
-    { id: "2", name: "Design", slug: "design" },
-    { id: "3", name: "Technology", slug: "technology" },
-  ];
+  // const categories = [
+  //   { id: "1", name: "Web Development", slug: "web-development" },
+  //   { id: "2", name: "Design", slug: "design" },
+  //   { id: "3", name: "Technology", slug: "technology" },
+  // ];
 
-  // In a production app, we would check if the user is authenticated
-  // For demo purposes, we'll use a placeholder user ID
+  const categories = await getAllCategories();
+
   const userId = "demo-user-id";
 
   return (

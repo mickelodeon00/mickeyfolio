@@ -82,9 +82,6 @@ export default function ContactSection() {
   const onSubmit = async (formdata: FormData) => {
     setIsSubmitting(true);
 
-    // Simulate form submission
-    // await new Promise((resolve) => setTimeout(resolve, 2000));
-
     const { data: response, error } = await contactMe(formdata);
 
     if (error) {
@@ -95,7 +92,14 @@ export default function ContactSection() {
       });
     }
 
-    console.log("Form data:", formdata);
+    if (response) {
+      toast({
+        title: "Thank you, " + formdata?.name + "! ✨",
+        description:
+          "Your message means a lot to me. I'll get back to you soon!",
+      });
+    }
+
     setIsSubmitting(false);
     setIsSubmitted(true);
     form.reset();

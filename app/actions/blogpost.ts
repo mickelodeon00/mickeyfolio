@@ -175,7 +175,7 @@ export async function contactMe(message: contactMe) {
   const supabase = await createClient();
 
   const { data, error } = await supabase
-    .from("message")
+    .from("messages")
     .insert([message])
     .select()
     .single();

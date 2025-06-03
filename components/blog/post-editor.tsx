@@ -149,14 +149,13 @@ export default function PostEditor({ categories, userId }: PostEditorProps) {
 
         toast({
           title: "Success! (Preview Mode)",
-          description:
-            "Your post would be submitted for approval in production",
+          description: "Your post would be submitted for approval",
         });
 
         // Reset form and redirect
-        // form.reset();
+        form.reset();
         // router.push("/blog");
-        // router.refresh();
+        router.refresh();
       } catch (error) {
         console.error("Error submitting post:", error);
         toast({
