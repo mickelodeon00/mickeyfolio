@@ -5,7 +5,8 @@ import Link from "next/link";
 import { Download, Mail } from "lucide-react";
 import PageWrapper from "@/components/layout/page-wrapper";
 import FadeInWhenVisible from "@/components/general/fadeIn-when-visible";
-import { fadeInLeft } from "@/utils/animations";
+import { fadeInLeft, fadeInUp } from "@/utils/animations";
+import ContactSection from "@/components/about/contact-me";
 
 export const metadata = {
   title: "About | Micheal",
@@ -54,7 +55,7 @@ export default function AboutPage() {
 
                 <div className="flex flex-wrap gap-4 justify-center md:justify-start">
                   <Button asChild>
-                    <Link href="mailto:contact@example.com">
+                    <Link href="mickelodeon00@gmail.com">
                       <Mail className="mr-2 h-4 w-4" />
                       Contact Me
                     </Link>
@@ -160,6 +161,10 @@ export default function AboutPage() {
                 </div>
               </section>
             </div>
+          </FadeInWhenVisible>
+
+          <FadeInWhenVisible variants={fadeInUp}>
+            <ContactSection />
           </FadeInWhenVisible>
         </div>
       </div>

@@ -19,7 +19,7 @@ export default function Home() {
             </h1>
 
             <p className="text-base md:text-xl max-w-2xl mx-auto mb-8 text-muted-foreground">
-              Software Developer with a sharp mathematical mind, crafting
+              A Software Developer with a sharp mathematical mind, crafting
               elegant digital experiences where logic meets creativity. Driven
               by precision, built with purpose, delivered with style
             </p>
@@ -39,7 +39,7 @@ export default function Home() {
 
             <div className="flex justify-center space-x-6">
               <Link
-                href="https://github.com"
+                href="https://github.com/mickelodeon00"
                 target="_blank"
                 rel="noopener noreferrer"
               >
@@ -52,7 +52,7 @@ export default function Home() {
                 </Button>
               </Link>
               <Link
-                href="https://twitter.com"
+                href="https://x.com/Mickelodeon00"
                 target="_blank"
                 rel="noopener noreferrer"
               >
@@ -65,7 +65,7 @@ export default function Home() {
                 </Button>
               </Link>
               <Link
-                href="https://linkedin.com"
+                href="https://www.linkedin.com/in/micheal-akingbade-90038225a/"
                 target="_blank"
                 rel="noopener noreferrer"
               >

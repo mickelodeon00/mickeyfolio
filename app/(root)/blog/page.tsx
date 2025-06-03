@@ -6,7 +6,11 @@ import PageWrapper from "@/components/layout/page-wrapper";
 import FadeInWhenVisible from "@/components/general/fadeIn-when-visible";
 import { fadeInLeft, fadeInUp } from "@/utils/animations";
 import { removeSpecialChars } from "@/lib/utils";
-import { getAllCategories, getBlogPosts } from "@/app/actions/blogpost";
+import {
+  getAllCategories,
+  getBlogPosts,
+  getBolgPostsByStatus,
+} from "@/app/actions/blogpost";
 import BlogPostCard from "@/components/blog/blog-post-card2";
 // import { getBlogPosts } from "@/app/actions";
 // import BlogPostCard from "@/components/blog/blog-post-card";
@@ -18,7 +22,9 @@ export const metadata = {
 
 export default async function BlogPage() {
   // Fetch blog posts from the database
-  const { data: posts, error: postError } = await getBlogPosts();
+  const { data: posts, error: postError } = await getBolgPostsByStatus({
+    status: "approved",
+  });
 
   // const categories = [
   //   { id: "1", name: "Web Development", slug: "web-development" },

@@ -47,21 +47,21 @@ export default function Footer() {
       <div className="container mx-auto px-4 flex flex-col md:flex-row justify-between items-center">
         <div className="flex items-center space-x-4 mb-4 md:mb-0">
           <Link
-            href="https://github.com"
+            href="https://github.com/mickelodeon00"
             target="_blank"
             rel="noopener noreferrer"
           >
             <Github className="h-5 w-5 hover:text-primary transition-colors" />
           </Link>
           <Link
-            href="https://twitter.com"
+            href="https://x.com/Mickelodeon00"
             target="_blank"
             rel="noopener noreferrer"
           >
             <Twitter className="h-5 w-5 hover:text-primary transition-colors" />
           </Link>
           <Link
-            href="https://linkedin.com"
+            href="https://www.linkedin.com/in/micheal-akingbade-90038225a/"
             target="_blank"
             rel="noopener noreferrer"
           >

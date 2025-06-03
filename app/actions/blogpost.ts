@@ -11,6 +11,16 @@ type BlogPostFormData = {
   slug?: string;
 };
 
+type BlogPostStatus = {
+  status: "pending" | "published" | "approved" | "rejected" | "draft";
+};
+
+type contactMe = {
+  name: string;
+  email: string;
+  message: string;
+};
+
 // server action
 export async function createBlogPost(data: BlogPostFormData) {
   const { title, content, excerpt, featuredImage, categories, slug } = data;
@@ -73,6 +83,27 @@ export async function getBlogPosts() {
   }
 }
 
+// This function is not used in the current code, but it can be used to filter posts by status
+export async function getBolgPostsByStatus({ status }: BlogPostStatus) {
+  const supabase = await createClient();
+
+  try {
+    const { data, error } = await supabase
+      .from("blogs")
+      .select("*")
+      .eq("status", status)
+      .order("created_at", { ascending: false });
+
+    if (error) {
+      return { data: [], error: error.message };
+    }
+
+    return { data, error: null };
+  } catch (error) {
+    return { data: [], error: "Failed to fetch posts" };
+  }
+}
+
 export async function getPostBySlug(slug: string) {
   const supabase = await createClient();
 
@@ -81,6 +112,7 @@ export async function getPostBySlug(slug: string) {
       .from("blogs")
       .select("*")
       .eq("slug", slug)
+      .eq("status", "approved") // Assuming you want only approved posts
       .single();
 
     if (error) {
@@ -102,6 +134,7 @@ export async function getPostsByCategory(categories: string[]) {
     const { data: posts, error } = await supabase
       .from("blogs")
       .select("*")
+      .eq("status", "approved") // Assuming you want only approved posts
       .contains("categories", categories); // Using contains to match any of the categories
 
     if (error) {
@@ -136,4 +169,23 @@ export async function getAllCategories() {
     // console.error("Database error:", error);
     return [];
   }
+}
+
+export async function contactMe(message: contactMe) {
+  const supabase = await createClient();
+
+  const { data, error } = await supabase
+    .from("message")
+    .insert([message])
+    .select()
+    .single();
+
+  if (error) {
+    return { data: null, error: error.message }; // Return plain string, not Error object
+  }
+
+  return {
+    data,
+    error: null,
+  };
 }
