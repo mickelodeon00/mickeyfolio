@@ -11,7 +11,7 @@ const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Portfolio | Micheal",
-  description: "Personal portfolio and blog of Micheal",
+  description: "Personal portfolio and blog of Micheal Akingbade",
   generator: "v0.dev",
 };
 
