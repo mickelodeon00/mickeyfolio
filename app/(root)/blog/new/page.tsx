@@ -11,13 +11,13 @@ export const metadata = {
 
 export default async function NewBlogPage() {
   // In a real app, this would fetch from Supabase
-  // const categories = [
-  //   { id: "1", name: "Web Development", slug: "web-development" },
-  //   { id: "2", name: "Design", slug: "design" },
-  //   { id: "3", name: "Technology", slug: "technology" },
-  // ];
+  const categories = [
+    { id: "1", name: "Web Development", slug: "web-development" },
+    { id: "2", name: "Design", slug: "design" },
+    { id: "3", name: "Technology", slug: "technology" },
+  ];
 
-  const categories = await getAllCategories();
+  // const categories = await getAllCategories();
 
   const userId = "demo-user-id";
 
