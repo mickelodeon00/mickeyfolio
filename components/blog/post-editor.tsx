@@ -132,20 +132,8 @@ export default function PostEditor({ categories, userId }: PostEditorProps) {
           .replace(/[^\w\s]/gi, "")
           .replace(/\s+/g, "-");
 
-        // Simulate API call
-        // await new Promise((resolve) => setTimeout(resolve, 1500));
-
-        const testData = {
-          title: "Test Post",
-          content: "Test content",
-          excerpt: "Test excerpt",
-          featuredImage: "/test.jpg",
-          categories: ["test"],
-          slug: "test-post",
-        };
         const postData = {
           ...data,
-          // content: `As the demand for faster data processing and real-time analytics grows, Edge Computing is emerging as a transformative force in `,
           slug,
         };
         const { data: response, error } = await createBlogPost(postData);

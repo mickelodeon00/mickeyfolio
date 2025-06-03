@@ -45,7 +45,7 @@ export async function createBlogPost(data: BlogPostFormData) {
       error: null,
     };
   } catch (error) {
-    console.error("Database error:", error);
+    // console.error("Database error:", error);
     return {
       data: null,
       error: "Failed to create post", // Return plain string
@@ -68,7 +68,7 @@ export async function getBlogPosts() {
 
     return { data: posts, error: null };
   } catch (error) {
-    console.error("Database error:", error);
+    // console.error("Database error:", error);
     return { data: [], error: "Failed to fetch posts" }; // Return plain string
   }
 }
@@ -89,7 +89,7 @@ export async function getPostBySlug(slug: string) {
 
     return post;
   } catch (error) {
-    console.error("Database error:", error);
+    // console.error("Database error:", error);
     return null; // Return null on error
   }
 }
@@ -105,13 +105,13 @@ export async function getPostsByCategory(categories: string[]) {
       .contains("categories", categories); // Using contains to match any of the categories
 
     if (error) {
-      console.error("Supabase error:", error);
+      // console.error("Supabase error:", error);
       return null;
     }
 
     return posts;
   } catch (error) {
-    console.error("Database error:", error);
+    // console.error("Database error:", error);
     return null;
   }
 }
@@ -124,7 +124,7 @@ export async function getAllCategories() {
       .from("categories")
       .select("*");
     if (error) {
-      console.error("Supabase error:", error);
+      // console.error("Supabase error:", error);
       return [];
     }
 
@@ -133,7 +133,7 @@ export async function getAllCategories() {
     // console.log("slugdd:", { catSlugs, error });
     return categories;
   } catch (error) {
-    console.error("Database error:", error);
+    // console.error("Database error:", error);
     return [];
   }
 }

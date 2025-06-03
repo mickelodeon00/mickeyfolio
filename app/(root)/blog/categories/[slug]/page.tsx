@@ -43,14 +43,15 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function CategoryPage({ params }: Props) {
   const { slug } = await params;
   const categories = await getAllCategories();
-  const { slug: category } = categories.find((cat) => cat.slug === slug);
+
+  const { slug: category } = categories.find((cat) => cat?.slug === slug);
 
   if (!category) {
     notFound();
   }
 
   // Fetch posts that include this category in their categories array
-  const posts = await getPostsByCategory([category.name]);
+  const posts = await getPostsByCategory([category]);
 
   return (
     <div className="container mx-auto px-4 py-24 md:py-32">
