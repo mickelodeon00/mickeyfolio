@@ -5,7 +5,8 @@ import FadeInWhenVisible from "@/components/general/fadeIn-when-visible";
 import { fadeInUp } from "@/utils/animations";
 import React from "react";
 
-import "../../editor/code.css";
+// import "../../editor/code.css";
+import "@/components/editor/styles/code.css";
 
 type Props = {
   content: string;
