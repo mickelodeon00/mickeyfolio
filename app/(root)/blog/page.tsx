@@ -12,6 +12,7 @@ import {
   getBolgPostsByStatus,
 } from "@/app/actions/blogpost";
 import BlogPostCard from "@/components/blog/blog-post-card2";
+import BlogCategoryClient from "@/components/blog/category";
 // import { getBlogPosts } from "@/app/actions";
 // import BlogPostCard from "@/components/blog/blog-post-card";
 
@@ -49,7 +50,7 @@ export default async function BlogPage() {
               </Button>
             </div>
 
-            <div className="mb-8">
+            {/* <div className="mb-8">
               <h2 className="text-lg font-medium mb-3">Categories</h2>
               <div className="flex flex-wrap gap-2">
                 <Link href="/blog">
@@ -71,11 +72,11 @@ export default async function BlogPage() {
                   </Link>
                 ))}
               </div>
-            </div>
+            </div> */}
           </FadeInWhenVisible>
 
           <FadeInWhenVisible variants={fadeInUp}>
-            {posts && posts.length > 0 ? (
+            {/* {posts && posts.length > 0 ? (
               <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                 {posts.map((post, index) => (
                   <BlogPostCard key={post.id} post={post} index={index} />
@@ -94,7 +95,8 @@ export default async function BlogPage() {
                   </Link>
                 </Button>
               </div>
-            )}
+            )} */}
+            <BlogCategoryClient categories={categories} />
           </FadeInWhenVisible>
         </div>
       </div>

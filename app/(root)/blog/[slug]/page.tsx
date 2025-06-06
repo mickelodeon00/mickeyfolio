@@ -110,7 +110,7 @@ export default async function BlogPostPage({ params }: Props) {
           <FadeInWhenVisible variants={fadeInUp}>
             <header className="mb-12">
               {/* Categories */}
-              {post.categories && post.categories.length > 0 && (
+              {/* {post.categories && post.categories.length > 0 && (
                 <div className="flex flex-wrap gap-2 mb-6">
                   {post.categories.map((category) => (
                     <Link href={`/blog/categories/${category}`} key={category}>
@@ -123,12 +123,26 @@ export default async function BlogPostPage({ params }: Props) {
                     </Link>
                   ))}
                 </div>
-              )}
+              )} */}
 
               {/* Title */}
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent">
                 {post.title}
               </h1>
+
+              {post.categories && post.categories.length > 0 && (
+                <div className="flex flex-wrap gap-2 mb-6">
+                  {post.categories.map((category, i) => (
+                    <Badge
+                      key={i}
+                      variant="secondary"
+                      className="hover:bg-primary hover:text-primary-foreground transition-colors"
+                    >
+                      {category}
+                    </Badge>
+                  ))}
+                </div>
+              )}
 
               {/* Excerpt */}
               {post.excerpt && (
@@ -162,7 +176,11 @@ export default async function BlogPostPage({ params }: Props) {
                 </div>
 
                 {/* Share Button - Now using client component */}
-                <ShareButton title={post.title} url={`/blog/${post.slug}`} />
+                <ShareButton
+                  title={post.title}
+                  // url={`${process.env.NEXT_PUBLIC_SITE_URL}/blog/${post.slug}`}
+                  url={`https://mickeyfolio.vercel.app/blog/${post.slug}`}
+                />
               </div>
 
               {/* Featured Image */}

@@ -8,11 +8,11 @@ import { getAllCategories, getPostsByCategory } from "@/app/actions/blogpost";
 import BlogPostCard from "@/components/blog/blog-post-card2";
 import { removeSpecialChars } from "@/lib/utils";
 
-interface CategoryPageProps {
-  params: {
-    slug: string;
-  };
-}
+// interface CategoryPageProps {
+//   params: {
+//     slug: string;
+//   };
+// }
 
 type Props = {
   searchParams?: Promise<{
@@ -44,11 +44,19 @@ export default async function CategoryPage({ params }: Props) {
   const { slug } = await params;
   const categories = await getAllCategories();
 
-  const { slug: category } = categories.find((cat) => cat?.slug === slug);
+  const category = categories.find((cat) => cat === slug);
+  console.log(
+    "pppppppppppppppppppppppppppppppppppppppppppp",
+    categories,
+    slug,
+    category
+  );
 
   if (!category) {
     notFound();
   }
+
+  console.log("Server Again:", slug);
 
   // Fetch posts that include this category in their categories array
   const posts = await getPostsByCategory([category]);

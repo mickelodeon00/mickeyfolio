@@ -45,6 +45,14 @@ const postSchema = z.object({
     .min(1, "Title is required")
     .min(3, "Title must be at least 3 characters")
     .max(200, "Title must be less than 200 characters"),
+  author_name: z
+    .string()
+    .min(1, "Name is required")
+    .min(3, "Name must be at least 3 characters"),
+  author_email: z
+    .string()
+    .min(1, { message: "Email is required." })
+    .email("This is not a valid email."),
   excerpt: z
     .string()
     .min(1, "Excerpt is required")
@@ -94,6 +102,9 @@ export default function PostEditor({ categories, userId }: PostEditorProps) {
       excerpt: "",
       content: "",
       featuredImage: "",
+      author_name: "",
+      author_email: "",
+
       categories: [],
     },
     mode: "onChange", // Validate on change for better UX
@@ -289,6 +300,56 @@ export default function PostEditor({ categories, userId }: PostEditorProps) {
               </FormItem>
             )}
           />
+
+          <div className="flex gap-4 w-full">
+            {/* Author Field */}
+            <FormField
+              control={control}
+              name="author_name"
+              render={({ field }) => (
+                <FormItem className="flex-1">
+                  <FormLabel>Name *</FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="Enter your full name"
+                      {...field}
+                      className={errors.author_name ? "border-destructive" : ""}
+                    />
+                  </FormControl>
+                  {/* <FormDescription>
+                  A compelling title helps readers find and engage with your
+                  content
+                </FormDescription> */}
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            {/* Author Email Field */}
+            <FormField
+              control={control}
+              name="author_email"
+              render={({ field }) => (
+                <FormItem className="flex-1">
+                  <FormLabel>Email *</FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="Johndoe@examplemail.com"
+                      {...field}
+                      className={
+                        errors.author_email ? "border-destructive" : ""
+                      }
+                    />
+                  </FormControl>
+                  {/* <FormDescription>
+                  A compelling title helps readers find and engage with your
+                  content
+                </FormDescription> */}
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
 
           {/* Content Field with Tabs */}
           <FormField

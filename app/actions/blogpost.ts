@@ -7,6 +7,8 @@ type BlogPostFormData = {
   content: string;
   excerpt: string;
   categories: string[];
+  author_name: string;
+  author_email: string;
   featuredImage?: string | undefined;
   slug?: string;
 };
@@ -23,7 +25,16 @@ type contactMe = {
 
 // server action
 export async function createBlogPost(data: BlogPostFormData) {
-  const { title, content, excerpt, featuredImage, categories, slug } = data;
+  const {
+    title,
+    content,
+    excerpt,
+    featuredImage,
+    categories,
+    slug,
+    author_email,
+    author_name,
+  } = data;
   const supabase = await createClient();
 
   try {
@@ -37,6 +48,8 @@ export async function createBlogPost(data: BlogPostFormData) {
           featured_image: featuredImage,
           categories,
           slug,
+          author_email,
+          author: author_name,
         },
       ])
       .select()
@@ -63,24 +76,32 @@ export async function createBlogPost(data: BlogPostFormData) {
   }
 }
 
-export async function getBlogPosts() {
+export async function getBlogPosts({
+  status,
+  category,
+}: {
+  status?: string;
+  category?: string[];
+}) {
   const supabase = await createClient();
 
-  try {
-    const { data: posts, error } = await supabase
-      .from("blogs")
-      .select("*")
-      .order("created_at", { ascending: false });
+  const query = supabase
+    .from("blogs")
+    .select("*")
+    .order("created_at", { ascending: false });
 
-    if (error) {
-      return { data: [], error: error.message }; // Return plain string, not Error object
-    }
+  if (status && status !== "all") query.eq("status", status);
+  if (category && category.length > 0 && !category.includes("all"))
+    query.contains("categories", category);
 
-    return { data: posts, error: null };
-  } catch (error) {
-    // console.error("Database error:", error);
-    return { data: [], error: "Failed to fetch posts" }; // Return plain string
+  const { data, error } = await query;
+
+  if (error) {
+    throw new Error(`Failed to fetch posts: ${error.message}`);
+    // return error
   }
+
+  return data;
 }
 
 // This function is not used in the current code, but it can be used to filter posts by status
@@ -164,7 +185,7 @@ export async function getAllCategories() {
     const catSlugs = categories.map((cat) => cat.slug);
 
     // console.log("slugdd:", { catSlugs, error });
-    return categories;
+    return catSlugs;
   } catch (error) {
     // console.error("Database error:", error);
     return [];

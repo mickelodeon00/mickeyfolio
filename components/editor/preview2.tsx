@@ -2,28 +2,7 @@
 
 import { useEffect, useState } from "react";
 import MarkdownIt from "markdown-it";
-let Prism: any = null;
-if (typeof window !== "undefined") {
-  Prism = require("prismjs");
-
-  // Import languages
-  require("prismjs/components/prism-javascript");
-  require("prismjs/components/prism-typescript");
-  require("prismjs/components/prism-jsx");
-  require("prismjs/components/prism-tsx");
-  require("prismjs/components/prism-bash");
-  require("prismjs/components/prism-css");
-  require("prismjs/components/prism-scss");
-  require("prismjs/components/prism-json");
-  require("prismjs/components/prism-python");
-  require("prismjs/components/prism-java");
-  require("prismjs/components/prism-sql");
-  require("prismjs/components/prism-yaml");
-  require("prismjs/components/prism-markdown");
-
-  // Import CSS theme
-  require("prismjs/themes/prism-tomorrow.css");
-}
+import Prism from "prismjs";
 
 interface PreviewProps {
   markdown: string;
@@ -64,12 +43,6 @@ export default function Preview({ markdown }: PreviewProps) {
         linkify: true,
         typographer: true,
         highlight: function (str, lang) {
-          // console.log("🔍 Highlighting:", {
-          //   lang,
-          //   codeLength: str.length,
-          //   code: str.substring(0, 50) + "...",
-          // });
-
           if (!Prism) {
             // console.log("❌ Prism not loaded");
             return `<pre class="language-${lang || "text"}"><code>${escapeHtml(
@@ -167,7 +140,7 @@ export default function Preview({ markdown }: PreviewProps) {
   }
 
   return (
-    <div className="h-full p-4 border rounded-md prose dark:prose-invert max-w-none">
+    <div className="h-full p-4 border rounded-md prose dark:prose-invert max-w-none prose-img:max-h-[500px] prose-img:object-contain prose-h1:text-center prose-h1:items-center prose-img:rounded-lg">
       <div
         dangerouslySetInnerHTML={{ __html: highlightedHtml }}
         className="prism-preview"

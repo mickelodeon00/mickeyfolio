@@ -5,11 +5,18 @@ import StarterKit from "@tiptap/starter-kit";
 import Highlight from "@tiptap/extension-highlight";
 import Image from "@tiptap/extension-image";
 
+import { Color } from "@tiptap/extension-color";
+import TextStyle from "@tiptap/extension-text-style";
+
 import Menubar from "./menubar";
 import TextAlign from "@tiptap/extension-text-align";
 import { useEffect } from "react";
 import MarkdownIt from "markdown-it";
-import { createEnhancedTurndown } from "./utils";
+import {
+  // createEnhancedMarkdownIt,
+  createEnhancedTurndown,
+  HtmlNode,
+} from "./utils";
 import { CodeBlockWithLanguage } from "./codeblock";
 import { CustomImage } from "./imageblock";
 import { CustomTable, TableRow, TableHeader, TableCell } from "./table";
@@ -20,7 +27,12 @@ import "./styles/table.css";
 // Usage in your component:
 const turndownService = createEnhancedTurndown();
 
-const md = new MarkdownIt();
+// const md = createEnhancedMarkdownIt();
+const md = new MarkdownIt({
+  html: true, // Enable HTML tags in source
+  breaks: true, // Convert '\n' in paragraphs into <br>
+  linkify: true, // Autoconvert URL-like text to links
+});
 
 interface Props {
   content: string;
@@ -55,6 +67,9 @@ const Tiptap = ({ content, setContent }: Props) => {
       TableRow,
       TableHeader,
       TableCell,
+      Color,
+      TextStyle,
+      HtmlNode,
     ],
     content: md.render(content || ""),
     onUpdate: ({ editor }) => {

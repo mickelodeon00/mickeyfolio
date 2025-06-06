@@ -13,6 +13,8 @@ import {
 import { Github, ExternalLink, CalendarDays, Clock } from "lucide-react";
 import FadeInWhenVisible from "@/components/general/fadeIn-when-visible";
 import { fadeInUp } from "@/utils/animations";
+import { CustomBadge } from "./custom-badge";
+import { removeSpecialChars } from "@/lib/utils";
 
 interface BlogPost {
   id: string;
@@ -24,7 +26,7 @@ interface BlogPost {
   author?: string;
   status?: "published" | "draft";
   tags?: string[];
-  category?: string;
+  categories?: string[];
   codeUrl?: string;
   demoUrl?: string;
   featured_image?: string;
@@ -60,6 +62,8 @@ export default function BlogPostCard({ post, index = 0 }: BlogPostCardProps) {
       ? textContent.substring(0, maxLength) + "..."
       : textContent;
   };
+
+  const Tags = ["tecnnology", "web development"];
 
   return (
     <FadeInWhenVisible variants={fadeInUp}>
@@ -106,7 +110,17 @@ export default function BlogPostCard({ post, index = 0 }: BlogPostCardProps) {
                 {tag}
               </Badge>
             ))}
-            {post.category && <Badge variant="outline">{post.category}</Badge>}
+            {post?.categories?.map((tag) => (
+              <Badge
+                key={tag}
+                variant="secondary"
+                className="flex items-center text-center justify-center capitalize "
+              >
+                {removeSpecialChars(tag)}
+              </Badge>
+              // <CustomBadge label={tag} />
+            ))}
+            {/* {post.categories && <Badge variant="outline">yyyyyyyyyyy</Badge>} */}
           </div>
         </CardContent>
 

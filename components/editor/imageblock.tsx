@@ -18,7 +18,7 @@ const imageProperties = [
 
 const ImageComponent = (props: any) => {
   const { node, updateAttributes } = props;
-  const { src, alt, className } = node.attrs;
+  const { src, alt, className, style } = node.attrs;
   const [open, setOpen] = useState(false);
 
   const setStyle = (style: string) => {
@@ -27,7 +27,12 @@ const ImageComponent = (props: any) => {
 
   return (
     <NodeViewWrapper className="relative rounded-lg">
-      <img src={src} alt={alt} className={`${className} rounded-lg`} />
+      <img
+        src={src}
+        alt={alt}
+        className={`${className} rounded-lg`}
+        style={style}
+      />
       <DropdownMenu open={open} onOpenChange={setOpen}>
         <DropdownMenuTrigger asChild>
           <button
@@ -41,9 +46,6 @@ const ImageComponent = (props: any) => {
               <ChevronDown className="w-3 h-3" />
             )}
           </button>
-          {/* <button className="absolute top-0 right-0 z-10 bg-white p-1 rounded shadow">
-            <span className="text-xs font-medium px-1">Style</span>
-          </button> */}
         </DropdownMenuTrigger>
         <DropdownMenuContent className="w-40">
           {imageProperties.map((prop) => (
@@ -55,26 +57,6 @@ const ImageComponent = (props: any) => {
               {prop.label}
             </DropdownMenuItem>
           ))}
-          {/* <DropdownMenuItem
-            onClick={() => setStyle("w-full object-cover aspect-video")}
-          >
-            Cover - Full Width
-          </DropdownMenuItem>
-          <DropdownMenuItem
-            onClick={() => setStyle("w-auto h-auto max-w-full")}
-          >
-            Default
-          </DropdownMenuItem>
-          <DropdownMenuItem
-            onClick={() => setStyle("w-full aspect-[4/3] object-contain")}
-          >
-            4:3 Ratio
-          </DropdownMenuItem>
-          <DropdownMenuItem
-            onClick={() => setStyle("w-full aspect-[16/9] object-contain")}
-          >
-            16:9 Ratio
-          </DropdownMenuItem> */}
         </DropdownMenuContent>
       </DropdownMenu>
     </NodeViewWrapper>
