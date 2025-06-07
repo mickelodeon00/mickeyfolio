@@ -28,6 +28,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent } from "@/components/ui/card";
 import { contactMe } from "@/app/actions/blogpost";
+import Link from "next/link";
 
 const formSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
@@ -144,7 +145,7 @@ export default function ContactSection() {
                         {item.label}
                       </p>
                       {item.href ? (
-                        <a
+                        <Link
                           href={item.href}
                           className="text-foreground hover:text-primary transition-colors duration-200 font-medium"
                           target={
@@ -157,7 +158,7 @@ export default function ContactSection() {
                           }
                         >
                           {item.value}
-                        </a>
+                        </Link>
                       ) : (
                         <p className="text-foreground font-medium">
                           {item.value}

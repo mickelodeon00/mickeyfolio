@@ -18,7 +18,7 @@ export default function Home() {
               <span className="text-primary">Software Alchemist</span>{" "}
             </h1>
 
-            <p className="text-base md:text-xl max-w-2xl mx-auto mb-8 text-muted-foreground">
+            <p className="text-base md:text-lg max-w-2xl mx-auto mb-8 text-muted-foreground">
               A Software Developer with a sharp mathematical mind, crafting
               elegant digital experiences where logic meets creativity. Driven
               by precision, built with purpose, delivered with style

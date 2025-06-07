@@ -1,12 +1,14 @@
 "use client";
 
 import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import BlogPostCard from "@/components/blog/blog-post-card2";
 import { removeSpecialChars } from "@/lib/utils";
 import { getBlogPosts } from "@/app/actions/blogpost";
 import { CustomBadge } from "./custom-badge";
 import Masonry from "react-masonry-css";
+import FadeInWhenVisible from "../general/fadeIn-when-visible";
+import { fadeInUp } from "@/utils/animations";
 
 type Props = {
   categories: string[];
@@ -22,6 +24,7 @@ export default function BlogCategoryClient({
     data: posts,
     isLoading,
     isError,
+    isFetching,
     status,
   } = useQuery({
     queryKey: ["posts-by-category", selected],
@@ -33,10 +36,10 @@ export default function BlogCategoryClient({
       return res;
     },
     enabled: !!selected,
-    // placeholderData: keepPreviousData,
+    placeholderData: keepPreviousData,
   });
 
-  const loadingCat = isLoading ? selected : null;
+  const loadingCat = isFetching ? selected : null;
 
   const breakpointColumnsObj = {
     default: 3,
@@ -60,8 +63,8 @@ export default function BlogCategoryClient({
         ))}
       </div>
 
-      {isLoading && <p>Loading posts...</p>}
-      {status === "pending" && <p>Pending posts...</p>}
+      {/* {isLoading && <p>Loading posts...</p>}
+      {status === "pending" && <p>Pending posts...</p>} */}
       {isError && <p>Failed to load posts.</p>}
       {!isLoading && posts?.length === 0 && (
         <p>No posts found for this category.</p>
@@ -74,7 +77,9 @@ export default function BlogCategoryClient({
       >
         {posts?.map((post, index) => (
           <div key={index}>
+            {/* <FadeInWhenVisible variants={fadeInUp}> */}
             <BlogPostCard post={post} index={index} />
+            {/* </FadeInWhenVisible> */}
           </div>
         ))}
       </Masonry>

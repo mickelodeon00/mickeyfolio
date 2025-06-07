@@ -48,19 +48,19 @@ export default function AboutPage() {
 
               <div className="flex-1 text-center md:text-left">
                 <h1 className="text-4xl font-bold mb-4">About Me</h1>
-                <p className="text-xl text-muted-foreground mb-6">
+                <p className="text-md text-muted-foreground mb-6">
                   I'm a web developer with a hacker's curiosity and an artist's
                   eye, turning ideas into sleek, functional code. Off-duty, I
                   dive into spy thrillers, military dramas, and chess strategy,
-                  gaming with grandmaster focus. Music fuels my
-                  creativity—whether debugging code or plotting my next move. A
-                  lifelong learner, I thrive where logic meets imagination: in
-                  code, cinema, and the perfect soundtrack.
+                  gaming with grandmaster focus. Music fuels my creativity,
+                  whether debugging code or plotting my next move. A lifelong
+                  learner, I thrive where logic meets imagination: in code,
+                  cinema, and the perfect soundtrack.
                 </p>
 
                 <div className="flex flex-wrap gap-4 justify-center md:justify-start">
                   <Button asChild>
-                    <Link href="mickelodeon00@gmail.com">
+                    <Link href="mailto:mickelodeon00@gmail.com">
                       <Mail className="mr-2 h-4 w-4" />
                       Contact Me
                     </Link>
@@ -68,7 +68,7 @@ export default function AboutPage() {
                   <Button asChild variant="outline">
                     <Link href="/resume.pdf" download>
                       <Download className="mr-2 h-4 w-4" />
-                      Download Resume
+                      Download Résumé
                     </Link>
                   </Button>
                 </div>

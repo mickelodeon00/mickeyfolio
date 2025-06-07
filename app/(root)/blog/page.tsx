@@ -38,7 +38,7 @@ export default async function BlogPage() {
   return (
     <PageWrapper>
       <div className="container mx-auto px-4 py-24 md:py-32">
-        <div className="max-w-5xl mx-auto">
+        <div className="max-w-6xl mx-auto">
           <FadeInWhenVisible variants={fadeInLeft}>
             <div className="flex items-center justify-between mb-8">
               <h1 className="text-4xl font-bold">Blog</h1>

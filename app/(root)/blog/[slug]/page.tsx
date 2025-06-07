@@ -90,8 +90,8 @@ export default async function BlogPostPage({ params }: Props) {
   return (
     <div className="min-h-screen bg-gradient-to-b from-background to-background/50">
       {/* Header Navigation */}
-      <div className="container mx-auto px-4 pt-8">
-        <FadeInWhenVisible variants={fadeInLeft}>
+      <div className="container mx-auto px-4 pt-8 min-h-20 ">
+        {/* <FadeInWhenVisible variants={fadeInLeft}>
           <Button variant="ghost" asChild className="mb-8 p-0 h-auto">
             <Link
               href="/blog"
@@ -101,7 +101,7 @@ export default async function BlogPostPage({ params }: Props) {
               Back to Blog
             </Link>
           </Button>
-        </FadeInWhenVisible>
+        </FadeInWhenVisible> */}
       </div>
 
       {/* Article Header */}
@@ -175,7 +175,6 @@ export default async function BlogPostPage({ params }: Props) {
                   <span>Article</span>
                 </div>
 
-                {/* Share Button - Now using client component */}
                 <ShareButton
                   title={post.title}
                   // url={`${process.env.NEXT_PUBLIC_SITE_URL}/blog/${post.slug}`}

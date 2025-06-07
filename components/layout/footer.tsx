@@ -32,7 +32,7 @@ export default function Footer() {
       try {
         // This would be a real weather API call in production
         // For demo, just setting a random temperature
-        setTemperature(Math.floor(Math.random() * 15) + 20);
+        setTemperature(Math.floor(Math.random() * 15) + 30);
       } catch (error) {
         console.error("Error fetching weather:", error);
       }
