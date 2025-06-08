@@ -41,7 +41,14 @@ export async function updateSession(request: NextRequest) {
     "/auth/confirm",
   ];
 
-  const signInRoutes = ["/login", "/signup", "/forgot-password"];
+  const privateRoutes = ["/dashboard", "/profile", "/settings"];
+
+  // If the user is not authenticated and tries to access a private route
+  if (!user && privateRoutes.some((route) => pathname.startsWith(route))) {
+    const url = request.nextUrl.clone();
+    url.pathname = "/";
+    return NextResponse.redirect(url);
+  }
 
   // If the user is not authenticated and tries to access a route other than public routes
   // if (!user && !publicRoutes.some((route) => pathname.startsWith(route))) {

@@ -170,6 +170,29 @@ export async function getPostsByCategory(categories: string[]) {
   }
 }
 
+export async function approvePost(id: string) {
+  const supabase = await createClient();
+  const { error: postError } = await supabase
+    .from("blogs")
+    .update({ status: "approved" }) // Update the status to 'approved'
+    .eq("id", id);
+  if (postError) {
+    return { error: postError.message };
+  }
+  return { error: null }; // Return null if no error
+}
+export async function deletePost(id: string) {
+  const supabase = await createClient();
+  const { error: postError } = await supabase
+    .from("blogs")
+    .delete()
+    .eq("id", id);
+  if (postError) {
+    return { error: postError.message };
+  }
+  return { error: null }; // Return null if no error
+}
+
 export async function getAllCategories() {
   const supabase = await createClient();
 
