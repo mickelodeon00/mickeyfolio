@@ -15,10 +15,10 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { useToast } from "@/hooks/use-toast";
 import Link from "next/link";
 import { Loader2 } from "lucide-react";
 import { createClient } from "@/supabase/client";
+import { toast } from "sonner";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -27,17 +27,15 @@ export default function LoginPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const redirect = searchParams.get("redirect") || "/";
-  const { toast } = useToast();
   const supabase = createClient();
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!email || !password) {
-      toast({
-        title: "Missing fields",
+      toast("Missing fields", {
         description: "Please enter both email and password",
-        variant: "destructive",
+        position: 'bottom-right'
       });
       return;
     }
@@ -54,18 +52,17 @@ export default function LoginPage() {
         throw error;
       }
 
-      toast({
-        title: "Login successful",
+      toast('Login successful', {
         description: "You have been logged in successfully",
+        position: 'bottom-right'
       });
 
-      router.push(redirect);
+      router.push('/dashboard');
       router.refresh();
     } catch (error: any) {
-      toast({
-        title: "Login failed",
+      toast('Login failed', {
         description: error.message || "An error occurred during login",
-        variant: "destructive",
+        position: 'bottom-right'
       });
     } finally {
       setIsLoading(false);

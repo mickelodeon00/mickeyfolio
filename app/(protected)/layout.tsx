@@ -2,9 +2,11 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
+import { cn, handleMutation } from "@/lib/utils";
+import { signOut } from "@/app/actions/auth";
+
 import {
   LayoutDashboard,
   Users,
@@ -13,7 +15,11 @@ import {
   X,
   ChevronLeft,
   ChevronRight,
+  LogOut,
 } from "lucide-react";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
+import { useMutation } from "@tanstack/react-query";
+import { toast } from "sonner";
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
@@ -40,7 +46,10 @@ const sidebarItems = [
 export default function DashboardLayout({ children }: DashboardLayoutProps) {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [openSignOut, setOpenSignOut] = useState(false);
+
   const pathname = usePathname();
+  const router = useRouter()
 
   const toggleSidebar = () => {
     setSidebarCollapsed(!sidebarCollapsed);
@@ -49,6 +58,24 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
   const toggleMobileMenu = () => {
     setMobileMenuOpen(!mobileMenuOpen);
   };
+
+  const signOutMutation = useMutation({
+    mutationFn: signOut,
+    onSuccess: () => {
+      toast('Success', {
+        description: 'Sign Out successful'
+      })
+      setOpenSignOut(false)
+      router.push("/");
+      router.refresh();
+    },
+    onError: (error: any) => {
+      toast(
+        "Error",
+        { description: error.message || "Failed to sign out", }
+      );
+    },
+  });
 
   return (
     <div className="min-h-screen bg-background">
@@ -126,17 +153,47 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
             })}
           </nav>
 
-          {/* Bottom section */}
-          {!sidebarCollapsed && (
-            <div className="border-t border-border pt-4 mt-4">
-              <div className="px-3 py-2">
-                <p className="text-xs font-medium text-muted-foreground">
-                  Admin Panel
-                </p>
-                <p className="text-xs text-muted-foreground/70 mt-1">v1.0.0</p>
-              </div>
-            </div>
-          )}
+
+          <div className="flex">
+            <AlertDialog open={openSignOut} onOpenChange={setOpenSignOut}>
+              <AlertDialogTrigger asChild>
+
+                <Button
+                  variant='outline'
+                  onClick={() => setMobileMenuOpen(false)}
+                  className={cn(
+                    "flex items-center  gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-all duration-200",
+                    "hover:bg-accent hover:text-accent-foreground",
+                    sidebarCollapsed && "justify-center px-2"
+                  )}
+                >
+                  <LogOut className="h-5 w-5" />
+                  {!sidebarCollapsed && (
+                    <span className="truncate">Sign Out</span>
+                  )}
+                </Button>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+                  <AlertDialogDescription>
+                    You will be signed out of your account and redirected to the
+                    homepage.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>Cancel</AlertDialogCancel>
+                  <Button
+                    onClick={() => handleMutation(signOutMutation)}
+                    disabled={signOutMutation.isPending}
+                  >
+                    {signOutMutation.isPending ? "Signing out..." : "Sign Out"}
+                  </Button>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
+          </div>
+
         </div>
       </aside>
 

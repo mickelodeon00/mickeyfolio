@@ -1,3 +1,4 @@
+import { UseMutationResult } from "@tanstack/react-query";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 
@@ -21,10 +22,10 @@ export function removeSpecialChars(
     lowerCase?: boolean;
     capitalize: boolean;
   } = {
-    keepSpaces: true,
-    lowerCase: false,
-    capitalize: false,
-  }
+      keepSpaces: true,
+      lowerCase: false,
+      capitalize: false,
+    }
 ): string {
   // Handle null/undefined
   if (str === null || str === undefined) {
@@ -64,4 +65,27 @@ export function removeSpecialChars(
   // }
 
   return cleaned;
+}
+
+
+export function generateFileName(file: File) {
+  const now = new Date();
+  const parts = [
+    now.getFullYear().toString().slice(2),
+    String(now.getMonth() + 1).padStart(2, '0'),
+    String(now.getDate()).padStart(2, '0'),
+    String(now.getHours()).padStart(2, '0'),
+    String(now.getMinutes()).padStart(2, '0'),
+    String(now.getSeconds()).padStart(2, '0'),
+    now.getMilliseconds().toString().padStart(4, '0'),
+  ];
+  const [name, ext] = file.name.split('.');
+  return `${name}${parts.join('-')}.${ext}`;
+}
+
+export function handleMutation<TArgs>(
+  mutation: UseMutationResult<unknown, unknown, TArgs, unknown>,
+  args?: TArgs
+) {
+  mutation.mutate(args as TArgs);
 }

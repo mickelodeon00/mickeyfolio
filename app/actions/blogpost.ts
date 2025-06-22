@@ -1,6 +1,8 @@
 "use server";
 
+import { generateFileName } from "@/lib/utils";
 import { createClient } from "@/supabase/server";
+import { data } from "autoprefixer";
 
 type BlogPostFormData = {
   title: string;
@@ -22,6 +24,24 @@ type contactMe = {
   email: string;
   message: string;
 };
+
+
+export type SafeResult<T> = [T | null, Error | null];
+
+/**
+ * Wrap any async function call and return a tuple: [result, error]
+ * @param fn A function that returns a Promise<T>
+ */
+export async function safe<T>(fn: () => Promise<T>): Promise<SafeResult<T>> {
+  try {
+    const result = await fn();
+    return [result, null];
+  } catch (err) {
+    return [null, err as Error];
+  }
+}
+
+
 
 // server action
 export async function createBlogPost(data: BlogPostFormData) {
@@ -207,7 +227,6 @@ export async function getAllCategories() {
 
     const catSlugs = categories.map((cat) => cat.slug);
 
-    // console.log("slugdd:", { catSlugs, error });
     return catSlugs;
   } catch (error) {
     // console.error("Database error:", error);
@@ -232,4 +251,147 @@ export async function contactMe(message: contactMe) {
     data,
     error: null,
   };
+}
+
+
+export async function getProjects() {
+  const supabase = await createClient()
+
+  const { data, error } = await supabase
+    .from('projects')
+    .select('*')
+
+  if (error) {
+    throw new Error(`Error fetching Projects`)
+  }
+
+  return data
+}
+async function getPublicImageUrl(imagePath: string) {
+  if (!imagePath) return null
+
+  const supabase = await createClient()
+
+  const { data } = supabase.storage
+    .from('cloud-bucket') // Replace with your actual bucket name
+    .getPublicUrl(imagePath)
+
+  return data.publicUrl
+}
+export type PojectFormData = {
+  id: string; // Assuming formData has an id field
+  title: string;
+  description: string;
+  imageFile?: File; // optional for image upload
+  stack: string[]; // comma-separated string
+  website?: string;
+  github_repository?: string;
+
+};
+export type CreateProjectFormData = {
+  title: string;
+  description: string;
+  imageFile?: File; // optional for image upload
+  stack: string[]; // comma-separated string
+  github_repository?: string;
+  website?: string;
+};
+
+export async function updateProject(formData: PojectFormData) {
+  const supabase = await createClient()
+
+  const { imageFile, description, stack, title, github_repository, website } = formData;
+
+  let imageUrl
+  if (imageFile) {
+    const { data: fileName } = await uploadImage({ file: imageFile, path: 'project-images' });
+    imageUrl = fileName
+  }
+
+  const { data, error } = await supabase
+    .from('projects')
+    .update({
+      title,
+      description,
+      stack,
+      ...(imageUrl && { image_url: imageUrl }),
+      ...(github_repository && { github_repository }),
+      ...(website && { website }),
+    })
+    .eq('id', formData.id) // Assuming formData has an id field
+
+  if (error) {
+    throw new Error(`Error fetching Projects`)
+  }
+
+  return data
+}
+export async function createProject(formData: CreateProjectFormData) {
+  const supabase = await createClient()
+
+  const { imageFile, description, stack, title, website, github_repository } = formData;
+
+  let imageUrl
+  if (imageFile) {
+    const { data: fileName } = await uploadImage({ file: imageFile, path: 'project-images' });
+    imageUrl = fileName
+  }
+
+  const { data, error } = await supabase
+    .from('projects')
+    .insert({
+      title,
+      description,
+      stack,
+      image_url: imageUrl,
+      ...(website && { website }),
+      ...(github_repository && { github_repository })
+    })
+
+  if (error) {
+    throw new Error(`Error fetching Projects`)
+  }
+
+  return data
+}
+
+
+
+
+export async function uploadImage({ file, path }: {
+  file: File;
+  path: string;
+}) {
+  const supabase = await createClient();
+  const fileName = generateFileName(file);
+
+  const [bucket, ...pathArray] = path.split('/')
+  const pathName = pathArray.length ? pathArray.join('/') : ''
+
+
+  const { error } = await supabase.storage
+    .from(bucket)
+    .upload(`${pathName}/${fileName}`, file, {
+      cacheControl: "3600",
+      upsert: false,
+    });
+
+  if (error) {
+    return { error, data: null };
+  }
+
+  return { data: fileName, error: null }
+}
+
+
+export async function deleteProject(id: string) {
+  const supabase = await createClient()
+
+  const { data, error } = await supabase.from('projects')
+    .delete()
+    .eq('id', id)
+
+  if (error) throw new Error(error.message)
+
+  return { message: 'deleted succesfully' }
 }
