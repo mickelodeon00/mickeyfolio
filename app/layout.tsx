@@ -27,6 +27,8 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <head>
         {/* Add inline script to set initial theme */}
+        <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+
         <Script id="theme-script" strategy="beforeInteractive">
           {`
             // Check for saved theme preference or prefer-color-scheme

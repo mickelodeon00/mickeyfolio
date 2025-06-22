@@ -66,10 +66,10 @@ export default function AboutPage() {
                     </Link>
                   </Button>
                   <Button asChild variant="outline">
-                    <Link href="/resume.pdf" download>
+                    <a href="/resume.pdf" download="Resume.pdf">
                       <Download className="mr-2 h-4 w-4" />
                       Download Résumé
-                    </Link>
+                    </a>
                   </Button>
                 </div>
               </div>
