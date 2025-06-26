@@ -26,9 +26,7 @@ export default function AboutPage() {
     "Tailwind CSS",
     "HTML/CSS",
     "Git",
-    "Docker",
     "AWS",
-    "Firebase",
   ];
 
   return (
@@ -128,42 +126,37 @@ export default function AboutPage() {
                 </h2>
                 <div className="space-y-8">
                   <div>
-                    <h3 className="text-xl font-semibold">
-                      Senior Frontend Developer
-                    </h3>
+                    <h3 className="text-xl font-semibold">NYSC Developer Intern</h3>
                     <p className="text-primary font-medium">
-                      Example Tech Inc. | 2020 - Present
+                      Valdymas Intelligence | August 2024 - Present
                     </p>
                     <p className="mt-2 text-muted-foreground">
-                      Led the development of the company's flagship product,
-                      improving performance by 40% and implementing new features
-                      that increased user engagement by 25%.
+                      Built and maintained reusable components with Next.js and TypeScript across various internal tools. Improved performance via SSR and code-splitting. Integrated APIs and contributed to enhancing the company’s WordPress website with custom features and plugin management.
                     </p>
                   </div>
 
                   <div>
-                    <h3 className="text-xl font-semibold">Web Developer</h3>
+                    <h3 className="text-xl font-semibold">Frontend Developer</h3>
                     <p className="text-primary font-medium">
-                      Digital Solutions Ltd. | 2018 - 2020
+                      Eduvacity | October 2023 - November 2024
                     </p>
                     <p className="mt-2 text-muted-foreground">
-                      Developed and maintained client websites, collaborated
-                      with designers to implement responsive designs, and
-                      optimized existing codebases for better performance.
+                      Worked on eduvacity.com, a modern e-learning platform. Built responsive UI components with React and Tailwind CSS, and integrated Supabase for authentication, real-time data, and content management. Collaborated closely with design and product teams to improve learning experiences.
                     </p>
                   </div>
 
                   <div>
-                    <h3 className="text-xl font-semibold">Junior Developer</h3>
+                    <h3 className="text-xl font-semibold">Fullstack Developer</h3>
                     <p className="text-primary font-medium">
-                      StartUp Co. | 2016 - 2018
+                      Zsolutions | July 2022 - August 2023
                     </p>
                     <p className="mt-2 text-muted-foreground">
-                      Assisted in the development of web applications, fixed
-                      bugs, and implemented new features based on user feedback.
+                      Contributed to the development of Advanced School Manager, a web and mobile platform for managing core school operations like enrollment, attendance, grading, and reporting. Built REST APIs, integrated Cloudinary for media handling, and designed responsive interfaces using React and Material UI.
                     </p>
                   </div>
+
                 </div>
+
               </section>
             </div>
           </FadeInWhenVisible>
