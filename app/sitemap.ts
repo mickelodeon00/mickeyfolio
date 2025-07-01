@@ -2,7 +2,7 @@ import { MetadataRoute } from 'next'
 import { getBlogPosts } from "@/app/actions/blogpost"
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = 'https://mickeyfolio.vercel.app'
+  const baseUrl = process.env.NODE_ENV === 'development' ? process.env.NEXT_PUBLIC_SITE_URL! : 'https://mickeyfolio.vercel.app'
 
   // Fetch all approved blog posts directly from the database
   const posts = await getBlogPosts({ status: "approved" })
