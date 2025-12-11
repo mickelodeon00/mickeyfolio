@@ -6,6 +6,38 @@ import { fadeInLeft } from "@/utils/animations";
 import FadeInWhenVisible from "@/components/general/fadeIn-when-visible";
 
 export default function Home() {
+  // const structuredData = {
+  //   '@context': 'https://schema.org',
+  //   '@graph': [
+  //     {
+  //       '@type': 'Person',
+  //       '@id': 'https://mickeyfolio.vercel.app/#person',
+  //       name: 'Mickey',
+  //       jobTitle: 'Full Stack Developer',
+  //       url: 'https://mickeyfolio.vercel.app',
+  //       image: 'https://mickeyfolio.vercel.app/profile.jpg',
+  //       sameAs: [
+  //         'https://github.com/yourusername',
+  //         'https://linkedin.com/in/yourprofile'
+  //       ],
+  //       worksFor: {
+  //         '@type': 'Organization',
+  //         name: 'Freelance'
+  //       }
+  //     },
+  //     {
+  //       '@type': 'WebSite',
+  //       '@id': 'https://mickeyfolio.vercel.app/#website',
+  //       url: 'https://mickeyfolio.vercel.app',
+  //       name: 'Mickey Portfolio',
+  //       description: 'Full Stack Developer Portfolio',
+  //       publisher: {
+  //         '@id': 'https://mickeyfolio.vercel.app/#person'
+  //       },
+  //       inLanguage: 'en-US'
+  //     }
+  //   ]
+  // }
   return (
     <PageWrapper>
       <div className="relative h-screen flex items-center justify-center overflow-hidden">
@@ -15,13 +47,11 @@ export default function Home() {
               Hi, I&apos;m Micheal
             </h1>
             <h1 className="text-5xl md:text-7xl font-bold mb-4">
-              <span className="text-primary">Software Alchemist</span>{" "}
+              <span className="text-primary">Software Developer</span>{" "}
             </h1>
 
             <p className="text-base md:text-lg max-w-2xl mx-auto mb-8 text-muted-foreground">
-              A Software Developer with a sharp mathematical mind, crafting
-              elegant digital experiences where logic meets creativity. Driven
-              by precision, built with purpose, delivered with style
+              Crafting elegant digital solutions where logic meets creativity. Specializing in web applications, cloud infrastructure, and scalable systems.
             </p>
 
             <div className="flex flex-wrap justify-center gap-4 mb-12">
