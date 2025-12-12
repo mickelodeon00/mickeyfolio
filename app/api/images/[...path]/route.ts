@@ -9,10 +9,16 @@ const BUCKET_MAPPINGS = {
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { path: string[] } }
+  { params }: { params: Promise<{ path?: string[] }> }
 ) {
   try {
-    const { path } = params
+    const resolvedParams = await params
+    const path = resolvedParams.path
+
+    // Guard against undefined
+    if (!path || path.length === 0) {
+      return NextResponse.json({ error: 'Image not found' }, { status: 400 })
+    }
 
     const [category, ...fileParts] = path
     const fileName = fileParts.join('/')

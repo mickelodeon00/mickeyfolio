@@ -39,6 +39,7 @@ export async function updateSession(request: NextRequest) {
     "/forgot-password",
     "/reset-password",
     "/auth/confirm",
+    "/auth/callback",
   ];
 
   const privateRoutes = ["/dashboard", "/profile", "/settings"];
