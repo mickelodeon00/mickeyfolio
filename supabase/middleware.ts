@@ -42,7 +42,7 @@ export async function updateSession(request: NextRequest) {
     "/auth/callback",
   ];
 
-  const privateRoutes = ["/dashboard", "/profile", "/settings"];
+  const privateRoutes = ["/dashboard", "/profile", "/settings", "/register"];
 
   // If the user is not authenticated and tries to access a private route
   if (!user && privateRoutes.some((route) => pathname.startsWith(route))) {
