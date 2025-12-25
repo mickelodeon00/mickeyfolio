@@ -45,18 +45,12 @@ export default async function CategoryPage({ params }: Props) {
   const categories = await getAllCategories();
 
   const category = categories.find((cat) => cat === slug);
-  console.log(
-    "pppppppppppppppppppppppppppppppppppppppppppp",
-    categories,
-    slug,
-    category
-  );
+
 
   if (!category) {
     notFound();
   }
 
-  console.log("Server Again:", slug);
 
   // Fetch posts that include this category in their categories array
   const posts = await getPostsByCategory([category]);

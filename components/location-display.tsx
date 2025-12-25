@@ -29,7 +29,7 @@ export function LocationDisplay() {
         <WeatherIcon
           icon={weatherData.icon}
           condition={weatherData.condition}
-          size={30}
+          size={35}
         />
       ) : null}
 
@@ -48,9 +48,6 @@ export function LocationDisplay() {
 
 
 
-
-
-
 interface WeatherIconProps {
   icon: string
   condition: string
@@ -61,7 +58,7 @@ export function WeatherIcon({ icon, condition, size = 40 }: WeatherIconProps) {
   return (
     <div className={`relative overflow-hidden`} style={{ width: size, height: size }}>
       <Image
-        src={`https:${icon}`} // Weather API returns //cdn.weatherapi.com/...
+        src={`https:${icon}`}
         alt={condition}
         fill
         className="object-contain"

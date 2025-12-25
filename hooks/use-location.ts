@@ -1,23 +1,23 @@
-// hooks/useUserLocation.ts
+import { getLocationFromCoords, getLocationFromIP, getWeather, LocationData } from '@/app/actions/location'
 import { useQuery } from '@tanstack/react-query'
 
-interface LocationData {
-  locality?: string
-  city?: string
-  region?: string
-  country?: string
-  countryCode?: string
-  latitude?: number
-  longitude?: number
-}
+// interface LocationData {
+//   locality?: string
+//   city?: string
+//   region?: string
+//   country?: string
+//   countryCode?: string
+//   latitude?: number
+//   longitude?: number
+// }
 
-interface WeatherData {
-  temperature: number
-  condition: string
-  icon: string
-  feelsLike: number
-  humidity: number
-}
+// interface WeatherData {
+//   temperature: number
+//   condition: string
+//   icon: string
+//   feelsLike: number
+//   humidity: number
+// }
 
 const getGeolocation = (): Promise<GeolocationPosition> => {
   return new Promise((resolve, reject) => {
@@ -31,44 +31,16 @@ const getGeolocation = (): Promise<GeolocationPosition> => {
 export function useLocation() {
   return useQuery({
     queryKey: ['userLocation'],
-    queryFn: async (): Promise<LocationData> => {
+    queryFn: async () => {
       try {
-        // Try browser geolocation
         const position = await getGeolocation()
         const { latitude, longitude } = position.coords
-
-        const response = await fetch(
-          `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${latitude}&longitude=${longitude}&localityLanguage=en`
-        )
-        const data = await response.json()
-
-        return {
-          locality: data.locality || undefined,
-          city: data.city || undefined,
-          region: data.principalSubdivision || undefined,
-          country: data.countryName || undefined,
-          countryCode: data.countryCode || undefined,
-          latitude,
-          longitude
-        }
-      } catch (error) {
-        // Fallback to IP geolocation
-        const response = await fetch('https://ipapi.co/json/')
-        const data = await response.json()
-
-
-        return {
-          locality: data.region || undefined,
-          city: data.city || undefined,
-          region: data.region || undefined,
-          country: data.country_name || undefined,
-          countryCode: data.country_code || undefined,
-          latitude: data.latitude || undefined,
-          longitude: data.longitude || undefined
-        }
+        return await getLocationFromCoords(latitude, longitude)
+      } catch {
+        return await getLocationFromIP()
       }
     },
-    staleTime: 1000 * 60 * 60, // 1 hour
+    staleTime: 1000 * 60 * 60,
     retry: 1,
   })
 }
@@ -77,30 +49,12 @@ export function useLocation() {
 export function useWeather(latitude?: number, longitude?: number) {
   return useQuery({
     queryKey: ['weather', latitude, longitude],
-    queryFn: async (): Promise<WeatherData> => {
-      if (!latitude || !longitude) {
-        throw new Error('Location required')
-      }
-
-      const response = await fetch(
-        `${process.env.WEATHER_API_BASE_URL}/current.json?key=${process.env.WEATHER_API_KEY}&q=${latitude},${longitude}`
-      )
-
-      if (!response.ok) throw new Error('Weather fetch failed')
-
-      const data = await response.json()
-
-
-      return {
-        temperature: data.current.temp_c,
-        condition: data.current.condition.text,
-        icon: data.current.condition.icon,
-        feelsLike: data.current.feelslike_c,
-        humidity: data.current.humidity
-      }
+    queryFn: async () => {
+      if (!latitude || !longitude) return null
+      return await getWeather(latitude, longitude)
     },
-    enabled: !!latitude && !!longitude, // Only run when we have coordinates
-    staleTime: 1000 * 60 * 10, // 10 minutes
+    enabled: !!latitude && !!longitude,
+    staleTime: 1000 * 60 * 10,
     retry: 1,
   })
 }
@@ -108,7 +62,7 @@ export function useWeather(latitude?: number, longitude?: number) {
 
 
 
-export const getLocationString = (data?: LocationData) => {
+export const getLocationString = (data?: LocationData | null) => {
   if (!data) return 'Location unavailable'
 
   const parts: string[] = []
