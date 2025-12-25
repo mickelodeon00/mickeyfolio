@@ -83,7 +83,7 @@ export function useWeather(latitude?: number, longitude?: number) {
       }
 
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_WEATHER_API_BASE_URL}/current.json?key=${process.env.NEXT_PUBLIC_WEATHER_API_KEY}&q=${latitude},${longitude}`
+        `${process.env.WEATHER_API_BASE_URL}/current.json?key=${process.env.WEATHER_API_KEY}&q=${latitude},${longitude}`
       )
 
       if (!response.ok) throw new Error('Weather fetch failed')
