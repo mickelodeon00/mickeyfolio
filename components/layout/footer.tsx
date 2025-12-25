@@ -4,6 +4,7 @@ import { Github, Linkedin, Twitter } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import Image from "next/image";
+import { LocationDisplay } from "../location-display";
 
 export default function Footer() {
   const [pixabayImage, setPixabayImage] = useState<string | null>(null);
@@ -74,22 +75,7 @@ export default function Footer() {
         </div>
 
         <div className="flex items-center mt-4 md:mt-0">
-          {temperature && location && (
-            <div className="text-sm mr-4">
-              {temperature}°C {location}
-            </div>
-          )}
-
-          {pixabayImage && (
-            <div className="relative h-10 w-10 rounded-md overflow-hidden">
-              <Image
-                src={pixabayImage || "/placeholder.svg"}
-                alt="Pixabay Image"
-                fill
-                className="object-cover"
-              />
-            </div>
-          )}
+          <LocationDisplay />
         </div>
       </div>
     </footer>
