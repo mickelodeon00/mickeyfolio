@@ -8,6 +8,8 @@ import Footer from "@/components/layout/footer";
 import Script from "next/script";
 import { Providers } from "./provider";
 import { Toaster } from "@/components/ui/sonner";
+import { ClerkProvider } from "@clerk/nextjs";
+import ConvexClientProvider from "@/components/ConvexClientProvider";
 // import { Toaster } from "sonner";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -44,16 +46,22 @@ export default function RootLayout({
           `}
         </Script>
       </head>
-      <Providers>
-        <body className={inter.className}>
-          <div className="min-h-screen flex flex-col">
-            <Navbar />
-            <main className="flex-grow">{children}</main>
-            <Footer />
-          </div>
-          <Toaster />
-        </body>
-      </Providers>
+      <body className={inter.className}>
+        <ClerkProvider>
+          <ConvexClientProvider>
+            <Providers>
+
+              <div className="min-h-screen flex flex-col">
+                <Navbar />
+                <main className="flex-grow">{children}</main>
+                <Footer />
+              </div>
+              <Toaster />
+            </Providers>
+          </ConvexClientProvider>
+
+        </ClerkProvider>
+      </body>
     </html>
   );
 }

@@ -1,0 +1,65 @@
+[
+  {
+    "title": "Eduvacity ",
+    "imageUrl": "Screenshot 2025-06-26 08035125-06-26-07-08-51-0837.png",
+    "description": "Eduvacity is an educational platform that connects learners to accredited university programs and professional courses across Nigeria and Africa. It allows users to explore, select, and enroll in both technical and business-oriented courses, offering certification and career support from recognized institutions",
+    "content": null,
+    "stack": [
+      "NextJs",
+      "Supabase",
+      "Tailwind",
+      "TypeScript",
+      "Jira",
+      "Slack"
+    ],
+    "website": "https://www.eduvacity.com/",
+    "githubRepository": null
+  },
+  {
+    "title": " Personal Portfolio",
+    "imageUrl": "Screenshot 2025-06-26 07575425-06-26-06-59-53-0431.png",
+    "description": "A fully responsive portfolio website showcasing my background, skills, and projects with smooth navigation and motion-enhanced UI. Includes a public-facing blog system where users can contribute posts via a custom-built editor",
+    "content": null,
+    "stack": [
+      "Next.js",
+      "Supabase",
+      "TailwindCSS",
+      "ShadCn",
+      "TiptapEditor",
+      "Framer Motion"
+    ],
+    "website": "https://mickeyfolio.vercel.app",
+    "githubRepository": "https://github.com/mickelodeon00/mickeyfolio"
+  },
+  {
+    "title": "Vetlep ",
+    "imageUrl": "Screenshot2025-06-260735325-06-26-06-39-21-0607.jpeg",
+    "description": "A microfinance platform for users to apply for loans, manage repayments, and learn about finance through a built-in Learning Hub. Admins can manage applications, track borrower activity, and update loan statuses via a dedicated dashboard.",
+    "content": null,
+    "stack": [
+      "NextJs",
+      "ReactQuery",
+      "Tailwind",
+      "Supabase",
+      "ShadCn"
+    ],
+    "website": "https://www.vetlep.com",
+    "githubRepository": null
+  },
+  {
+    "title": "Valdymas College Dashboard",
+    "imageUrl": "Screenshot2025-06-260742125-06-26-06-46-02-0582.jpeg",
+    "description": "An internal platform for Valdymas College used by students and staff to view academic records, access internal tools, and manage school data",
+    "content": null,
+    "stack": [
+      "NextJs",
+      "Supabase",
+      "TypeScript",
+      "shadCn",
+      "TailwindCSS",
+      "PostgreSQL"
+    ],
+    "website": "https://valdymas-college.vercel.app/dashboard",
+    "githubRepository": null
+  }
+]

@@ -1,62 +1,23 @@
-"use client";
+'use client'
 
-import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import {
-  Check,
-  X,
-  Eye,
-  BarChart3,
-} from "lucide-react";
-import { getBlogPosts, getProjects } from "@/app/actions/blogpost";
+import { useState } from "react"
+import { useQuery } from "convex/react"
+import { api } from "@/convex/_generated/api"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Check, X, Eye, BarChart3 } from "lucide-react"
+import PostContent from "./tabs/postContent"
+import PendingPost from "./tabs/pendingPost"
+import ProjectContent from "./tabs/projectContent"
 
-import PostContent from "./tabs/postContent";
-import PendingPost from "./tabs/pendingPost";
-import ProjectContent from "./tabs/projectContent";
+export default function DashboardClient() {
+  const [activeTab, setActiveTab] = useState("my-posts")
 
+  const approvedPosts = useQuery(api.posts.list, { status: "approved" }) ?? []
+  const pendingPosts = useQuery(api.posts.list, { status: "pending" }) ?? []
+  const projects = useQuery(api.projects.list) ?? []
 
-
-interface DashboardClientProps {
-  user: any;
-}
-
-export default function DashboardClient({ user }: DashboardClientProps) {
-  const [activeTab, setActiveTab] = useState("my-posts");
-  const { data: projects = [], isLoading: projectsLoading, error: projectsError } = useQuery({
-    queryKey: ['projects'],
-    queryFn: getProjects,
-    staleTime: 5 * 60 * 1000
-  })
-
-  const {
-    data: posts = [],
-    isLoading: postsLoading,
-    error: postsError,
-  } = useQuery({
-    queryKey: ["posts"],
-    queryFn: () => getBlogPosts({}),
-    staleTime: 5 * 60 * 1000, // 5 minutes
-  });
-
-  const {
-    data: pendingPosts = [],
-    isLoading: pendingLoading,
-    error: pendingError,
-  } = useQuery({
-    queryKey: ["pending-posts"],
-    queryFn: () => getBlogPosts({ status: "pending" }),
-    staleTime: 5 * 60 * 1000,
-  });
-
-
-  const isLoading = postsLoading || pendingLoading || projectsError
+  const isLoading = approvedPosts === undefined || pendingPosts === undefined || projects === undefined
 
   if (isLoading) {
     return (
@@ -68,14 +29,20 @@ export default function DashboardClient({ user }: DashboardClientProps) {
           </div>
         </div>
       </div>
-    );
+    )
   }
+
+  const thisMonthPosts = approvedPosts.filter((post) => {
+    const postDate = new Date(post._creationTime)
+    const currentDate = new Date()
+    return (
+      postDate.getMonth() === currentDate.getMonth() &&
+      postDate.getFullYear() === currentDate.getFullYear()
+    )
+  })
 
   return (
     <div className="max-w-5xl mx-auto space-y-6">
-      {/* Sign Out Button - positioned top right */}
-
-
       {/* Stats Cards */}
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         <Card className="hover:shadow-md transition-shadow">
@@ -84,7 +51,7 @@ export default function DashboardClient({ user }: DashboardClientProps) {
             <BarChart3 className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{posts.length}</div>
+            <div className="text-2xl font-bold">{approvedPosts.length}</div>
             <p className="text-xs text-muted-foreground">Published posts</p>
           </CardContent>
         </Card>
@@ -108,18 +75,7 @@ export default function DashboardClient({ user }: DashboardClientProps) {
             <Eye className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">
-              {
-                posts.filter((post) => {
-                  const postDate = new Date(post.created_at);
-                  const currentDate = new Date();
-                  return (
-                    postDate.getMonth() === currentDate.getMonth() &&
-                    postDate.getFullYear() === currentDate.getFullYear()
-                  );
-                }).length
-              }
-            </div>
+            <div className="text-2xl font-bold">{thisMonthPosts.length}</div>
             <p className="text-xs text-muted-foreground">Posts this month</p>
           </CardContent>
         </Card>
@@ -137,17 +93,13 @@ export default function DashboardClient({ user }: DashboardClientProps) {
       </div>
 
       {/* Tabs */}
-      <Tabs
-        value={activeTab}
-        onValueChange={setActiveTab}
-        className="space-y-4"
-      >
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
         <TabsList className="grid w-full grid-cols-3">
           <TabsTrigger value="my-posts" className="relative">
             My Posts
-            {posts.length > 0 && (
+            {approvedPosts.length > 0 && (
               <span className="ml-2 bg-primary/10 text-primary text-xs px-2 py-0.5 rounded-full">
-                {posts.length}
+                {approvedPosts.length}
               </span>
             )}
           </TabsTrigger>
@@ -168,11 +120,11 @@ export default function DashboardClient({ user }: DashboardClientProps) {
             )}
           </TabsTrigger>
         </TabsList>
-        <PostContent posts={posts} />
-        <PendingPost pendingPosts={pendingPosts} />
-        <ProjectContent projects={projects} />
 
+        <PostContent />
+        <PendingPost />
+        <ProjectContent />
       </Tabs>
     </div>
-  );
+  )
 }
