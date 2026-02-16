@@ -1,3 +1,4 @@
+// convex/posts.ts
 import { v } from "convex/values";
 import { query, mutation } from "./_generated/server";
 
@@ -87,7 +88,17 @@ export const update = mutation({
     if (!identity) throw new Error("Unauthorized");
 
     const { id, ...updates } = args;
+
+    // Get existing post to return old image URL
+    const existing = await ctx.db.get(id);
+    if (!existing) throw new Error("Post not found");
+
     await ctx.db.patch(id, updates);
+
+    // Return old featuredImage for cleanup
+    return {
+      oldFeaturedImage: existing.featuredImage
+    };
   },
 });
 
@@ -109,6 +120,15 @@ export const remove = mutation({
     const identity = await ctx.auth.getUserIdentity();
     if (!identity) throw new Error("Unauthorized");
 
+    // Get post before deleting to return ID for R2 cleanup
+    const post = await ctx.db.get(args.id);
+    if (!post) throw new Error("Post not found");
+
     await ctx.db.delete(args.id);
+
+    // Return post ID for R2 folder deletion
+    return {
+      postId: args.id
+    };
   },
 });

@@ -2,7 +2,7 @@ import PostEditor from "@/components/blog/post-editor";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import PageWrapper from "@/components/layout/page-wrapper";
-import { getAllCategories } from "@/app/actions/blogpost";
+
 
 export const metadata = {
   title: "Create New Blog Post | Micheal",
@@ -33,7 +33,7 @@ export default async function NewBlogPage() {
           </div>
 
           <div className="bg-card rounded-lg border p-6">
-            <PostEditor categories={categories} userId={userId} />
+            <PostEditor />
           </div>
         </div>
       </div>

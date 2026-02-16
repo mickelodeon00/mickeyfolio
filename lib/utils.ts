@@ -6,6 +6,44 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
+
+
+
+// Generic safe result type
+export type SafeResult<T> =
+  | [T, null]
+  | [null, Error]
+
+/**
+ * Wrap any async function and return [data, error] tuple
+ * Works with any error type (Axios, AWS SDK, fetch, etc.)
+ * 
+ * @example
+ * // With async function
+ * const [data, error] = await safe(() => uploadProjectImage(formData))
+ * 
+ * // With server action
+ * const [result, error] = await safe(() => deleteProjectImage({ projectId }))
+ * 
+ * // Direct error handling
+ * if (error) {
+ *   toast.error(error.message)
+ *   return
+ * }
+ */
+export async function safe<T>(fn: () => Promise<T>): Promise<SafeResult<T>> {
+  try {
+    const result = await fn()
+    return [result, null]
+  } catch (err) {
+    // Convert any error to Error instance for consistency
+    const error = err instanceof Error ? err : new Error(String(err))
+    return [null, error]
+  }
+}
+
+
+
 /**
  * Removes special characters from a string, converts hyphens to spaces,
  * and keeps only alphanumeric characters and spaces

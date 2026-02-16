@@ -1,11 +1,13 @@
-"use client";
+"use client"
 
-import { useState } from "react";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useToast } from "../../hooks/use-toast";
-
-import * as z from "zod";
+import { useState } from "react"
+import { useForm } from "react-hook-form"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { useToast } from "../../hooks/use-toast"
+import { useMutation } from "@tanstack/react-query"
+import { useConvex } from "convex/react"
+import { api } from "@/convex/_generated/api"
+import * as z from "zod"
 import {
   Mail,
   MapPin,
@@ -14,8 +16,8 @@ import {
   CheckCircle2,
   Loader2,
   MessageSquare,
-} from "lucide-react";
-import { Button } from "@/components/ui/button";
+} from "lucide-react"
+import { Button } from "@/components/ui/button"
 import {
   Form,
   FormControl,
@@ -23,26 +25,25 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Card, CardContent } from "@/components/ui/card";
-import { contactMe } from "@/app/actions/blogpost";
-import Link from "next/link";
+} from "@/components/ui/form"
+import { Input } from "@/components/ui/input"
+import { Textarea } from "@/components/ui/textarea"
+import { Card, CardContent } from "@/components/ui/card"
+import Link from "next/link"
 
 const formSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
   email: z.string().email("Please enter a valid email address"),
   message: z.string().min(10, "Message must be at least 10 characters"),
-});
+})
 
-type FormData = z.infer<typeof formSchema>;
+type FormData = z.infer<typeof formSchema>
 
 interface ContactInfo {
-  icon: React.ElementType;
-  label: string;
-  value: string;
-  href?: string;
+  icon: React.ElementType
+  label: string
+  value: string
+  href?: string
 }
 
 const contactInfo: ContactInfo[] = [
@@ -63,13 +64,12 @@ const contactInfo: ContactInfo[] = [
     label: "Location",
     value: "Lagos, Nigeria",
   },
-];
+]
 
 export default function ContactSection() {
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isSubmitted, setIsSubmitted] = useState(false);
-
-  const { toast } = useToast();
+  const [isSubmitted, setIsSubmitted] = useState(false)
+  const { toast } = useToast()
+  const convex = useConvex()
 
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
@@ -78,36 +78,32 @@ export default function ContactSection() {
       email: "",
       message: "",
     },
-  });
+  })
 
-  const onSubmit = async (formdata: FormData) => {
-    setIsSubmitting(true);
-
-    const { data: response, error } = await contactMe(formdata);
-
-    if (error) {
+  const submitMessage = useMutation({
+    mutationFn: (data: FormData) =>
+      convex.mutation(api.messages.create, data),
+    onSuccess: (_, variables) => {
+      toast({
+        title: `Thank you, ${variables.name}! ✨`,
+        description: "Your message means a lot to me. I'll get back to you soon!",
+      })
+      setIsSubmitted(true)
+      form.reset()
+      setTimeout(() => setIsSubmitted(false), 3000)
+    },
+    onError: () => {
       toast({
         title: "Error",
         description: "Something went wrong, try again later",
         variant: "destructive",
-      });
-    }
+      })
+    },
+  })
 
-    if (response) {
-      toast({
-        title: "Thank you, " + formdata?.name + "! ✨",
-        description:
-          "Your message means a lot to me. I'll get back to you soon!",
-      });
-    }
-
-    setIsSubmitting(false);
-    setIsSubmitted(true);
-    form.reset();
-
-    // Reset success state after 3 seconds
-    setTimeout(() => setIsSubmitted(false), 3000);
-  };
+  const onSubmit = (data: FormData) => {
+    submitMessage.mutate(data)
+  }
 
   return (
     <section className="py-24 px-4 sm:px-6 lg:px-8">
@@ -148,21 +144,13 @@ export default function ContactSection() {
                         <Link
                           href={item.href}
                           className="text-foreground hover:text-primary transition-colors duration-200 font-medium"
-                          target={
-                            item.href.startsWith("http") ? "_blank" : undefined
-                          }
-                          rel={
-                            item.href.startsWith("http")
-                              ? "noopener noreferrer"
-                              : undefined
-                          }
+                          target={item.href.startsWith("http") ? "_blank" : undefined}
+                          rel={item.href.startsWith("http") ? "noopener noreferrer" : undefined}
                         >
                           {item.value}
                         </Link>
                       ) : (
-                        <p className="text-foreground font-medium">
-                          {item.value}
-                        </p>
+                        <p className="text-foreground font-medium">{item.value}</p>
                       )}
                     </div>
                   </div>
@@ -185,19 +173,14 @@ export default function ContactSection() {
             <Card className="border-0 shadow-2xl shadow-black/5 dark:shadow-black/20">
               <CardContent className="p-8">
                 <Form {...form}>
-                  <form
-                    onSubmit={form.handleSubmit(onSubmit)}
-                    className="space-y-6"
-                  >
+                  <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
                     <div className="grid sm:grid-cols-2 gap-6">
                       <FormField
                         control={form.control}
                         name="name"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel className="text-base font-medium">
-                              Name
-                            </FormLabel>
+                            <FormLabel className="text-base font-medium">Name</FormLabel>
                             <FormControl>
                               <Input
                                 placeholder="Your full name"
@@ -214,9 +197,7 @@ export default function ContactSection() {
                         name="email"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel className="text-base font-medium">
-                              Email
-                            </FormLabel>
+                            <FormLabel className="text-base font-medium">Email</FormLabel>
                             <FormControl>
                               <Input
                                 type="email"
@@ -236,9 +217,7 @@ export default function ContactSection() {
                       name="message"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel className="text-base font-medium">
-                            Message
-                          </FormLabel>
+                          <FormLabel className="text-base font-medium">Message</FormLabel>
                           <FormControl>
                             <Textarea
                               placeholder="Tell me about your project or just say hello..."
@@ -253,10 +232,10 @@ export default function ContactSection() {
 
                     <Button
                       type="submit"
-                      disabled={isSubmitting || isSubmitted}
+                      disabled={submitMessage.isPending || isSubmitted}
                       className="w-full h-12 text-base font-medium relative overflow-hidden group"
                     >
-                      {isSubmitting ? (
+                      {submitMessage.isPending ? (
                         <>
                           <Loader2 className="w-4 h-4 mr-2 animate-spin" />
                           Sending Message...
@@ -281,5 +260,5 @@ export default function ContactSection() {
         </div>
       </div>
     </section>
-  );
+  )
 }

@@ -1,3 +1,5 @@
+// components/dashboard/editProjectForm.tsx (updated)
+
 'use client'
 
 import { useState } from 'react'
@@ -20,7 +22,7 @@ const formSchema = z.object({
   stack: z.array(z.string()).min(1, 'At least one technology is required'),
   website: z.string().optional(),
   githubRepository: z.string().optional(),
-  imageFile: z.instanceof(File).optional(),
+  // Remove imageFile from schema - handle separately
 })
 
 type FormData = z.infer<typeof formSchema>
@@ -51,7 +53,11 @@ export default function EditProjectForm({ project, onClose }: EditProjectFormPro
 
   const onSubmit = (data: FormData) => {
     updateProject.mutate(
-      { id: project._id, ...data },
+      {
+        id: project._id,
+        ...data,
+        imageFile: selectedFile,  // ✅ Pass selectedFile directly
+      },
       { onSuccess: onClose }
     )
   }
@@ -91,17 +97,11 @@ export default function EditProjectForm({ project, onClose }: EditProjectFormPro
 
         <div>
           <Label>Project Image</Label>
-          <Controller
-            name="imageFile"
-            control={control}
-            render={() => (
-              <SimpleFileUpload
-                onFileChange={setSelectedFile}
-                currentFile={selectedFile}
-                error={errors.imageFile?.message}
-                previousImageUrl={project.imageUrl ?? undefined}
-              />
-            )}
+          {/* No Controller needed - just pass state setter */}
+          <SimpleFileUpload
+            onFileChange={setSelectedFile}
+            currentFile={selectedFile}
+            previousImageUrl={project.imageUrl ?? undefined}
           />
         </div>
 

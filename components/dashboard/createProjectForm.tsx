@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { useForm, Controller } from 'react-hook-form'
+import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { Input } from '@/components/ui/input'
@@ -20,7 +20,7 @@ const formSchema = z.object({
   stack: z.array(z.string()).min(1, 'At least one technology is required'),
   website: z.string().optional(),
   githubRepository: z.string().optional(),
-  imageFile: z.instanceof(File).optional(),
+  // Remove imageFile from schema - handle separately
 })
 
 type FormData = z.infer<typeof formSchema>
@@ -31,7 +31,7 @@ export default function CreateProjectForm() {
 
   const { createProject } = useProjectMutations()
 
-  const { register, handleSubmit, reset, control, setValue, watch, formState: { errors } } = useForm<FormData>({
+  const { register, handleSubmit, reset, setValue, watch, formState: { errors } } = useForm<FormData>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       title: '',
@@ -43,13 +43,19 @@ export default function CreateProjectForm() {
   const watchedStack = watch('stack')
 
   const onSubmit = (data: FormData) => {
-    createProject.mutate(data, {
-      onSuccess: () => {
-        reset()
-        setSelectedFile(null)
-        setCurrentTech('')
+    createProject.mutate(
+      {
+        ...data,
+        imageFile: selectedFile,  // ✅ Pass selectedFile here
       },
-    })
+      {
+        onSuccess: () => {
+          reset()
+          setSelectedFile(null)
+          setCurrentTech('')
+        },
+      }
+    )
   }
 
   const addTechnology = () => {
@@ -126,16 +132,11 @@ export default function CreateProjectForm() {
 
         <div>
           <Label>Project Image</Label>
-          <Controller
-            name="imageFile"
-            control={control}
-            render={() => (
-              <SimpleFileUpload
-                onFileChange={setSelectedFile}
-                currentFile={selectedFile}
-                error={errors.imageFile?.message}
-              />
-            )}
+          {/* No Controller needed */}
+          <SimpleFileUpload
+            onFileChange={setSelectedFile}
+            currentFile={selectedFile}
+          // error={errors.imageFile?.message}
           />
         </div>
 

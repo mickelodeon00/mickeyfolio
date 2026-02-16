@@ -1,11 +1,15 @@
 import { MetadataRoute } from 'next'
-import { getBlogPosts } from "@/app/actions/blogpost"
+import { fetchQuery } from 'convex/nextjs'
+import { api } from '@/convex/_generated/api'
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = process.env.NODE_ENV === 'development' ? process.env.NEXT_PUBLIC_SITE_URL! : 'https://mickeyfolio.vercel.app'
 
   // Fetch all approved blog posts directly from the database
-  const posts = await getBlogPosts({ status: "approved" })
+  // const posts = await getBlogPosts({ status: "approved" })
+  const posts = await fetchQuery(api.posts.list, { status: "approved" })
+
+
 
   const staticPages = [
     {

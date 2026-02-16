@@ -14,41 +14,6 @@ import FadeInWhenVisible from "@/components/general/fadeIn-when-visible";
 import { fadeInUp } from "@/utils/animations";
 import Projects from "@/components/projects/projects";
 import { useQuery } from "@tanstack/react-query";
-import { getProjects } from "@/app/actions/blogpost";
-
-// Sample project data - in a real app, this would come from Supabase
-const projects = [
-  {
-    id: "1",
-    title: "E-commerce Platform",
-    description:
-      "A full-featured e-commerce platform built with Next.js and Supabase.",
-    image: "/placeholder.svg?height=300&width=600",
-    tags: ["Next.js", "Supabase", "Tailwind CSS", "TypeScript"],
-    github: "https://github.com",
-    demo: "https://example.com",
-  },
-  {
-    id: "2",
-    title: "Task Management App",
-    description:
-      "A productivity app for managing tasks and projects with team collaboration features.",
-    image: "/placeholder.svg?height=300&width=600",
-    tags: ["React", "Firebase", "Redux", "Material UI"],
-    github: "https://github.com",
-    demo: "https://example.com",
-  },
-  {
-    id: "3",
-    title: "Weather Dashboard",
-    description:
-      "Real-time weather information with interactive maps and forecasts.",
-    image: "/placeholder.svg?height=300&width=600",
-    tags: ["JavaScript", "OpenWeather API", "Chart.js", "Mapbox"],
-    github: "https://github.com",
-    demo: "https://example.com",
-  },
-];
 
 export const metadata = {
   title: "Projects | Micheal",

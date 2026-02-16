@@ -50,19 +50,35 @@ export const update = mutation({
   handler: async (ctx, args) => {
     const identity = await ctx.auth.getUserIdentity();
     if (!identity) throw new Error("Unauthorized");
-
     const { id, ...updates } = args;
+
+    const existing = await ctx.db.get(id);
+    if (!existing) throw new Error("Project not found");
     await ctx.db.patch(id, updates);
+
+    return {
+      oldImageUrl: existing.imageUrl
+    };
   },
 });
 
 // Delete project (admin only)
+// Update remove mutation to return project data for cleanup
 export const remove = mutation({
   args: { id: v.id("projects") },
   handler: async (ctx, args) => {
     const identity = await ctx.auth.getUserIdentity();
     if (!identity) throw new Error("Unauthorized");
 
+    const project = await ctx.db.get(args.id);
+    if (!project) throw new Error("Project not found");
+
     await ctx.db.delete(args.id);
+
+    return {
+      projectId: args.id,
+      imageUrl: project.imageUrl
+    };
   },
 });
+

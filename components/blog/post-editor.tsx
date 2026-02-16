@@ -1,17 +1,19 @@
-"use client";
+"use client"
 
-import React, { useTransition } from "react";
-import { useRouter } from "next/navigation";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
-import { Button } from "../ui/button";
-import { Input } from "../ui/input";
-import { Textarea } from "../ui/textarea";
-import { Label } from "../ui/label";
-import { useToast } from "../../hooks/use-toast";
-import { Loader2, Eye, Edit, PenSquareIcon } from "lucide-react";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
+import React, { useTransition } from "react"
+import { useRouter } from "next/navigation"
+import { useForm } from "react-hook-form"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { z } from "zod"
+import { useMutation } from "@tanstack/react-query"
+import { useConvex, useQueries, useQuery } from "convex/react"
+import { api } from "@/convex/_generated/api"
+import { Button } from "../ui/button"
+import { Input } from "../ui/input"
+import { Textarea } from "../ui/textarea"
+import { useToast } from "../../hooks/use-toast"
+import { Loader2, Eye, Edit, PenSquareIcon } from "lucide-react"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs"
 import {
   Form,
   FormControl,
@@ -20,23 +22,12 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "../ui/form";
-import Tiptap from "../editor/tiptap";
-import Preview from "../editor/preview2";
-import MarkdownEditor from "../editor/markdown-editor";
-import { createBlogPost } from "@/app/actions/blogpost";
-
-// Types
-interface Category {
-  id: string;
-  name: string;
-  slug: string;
-}
-
-interface PostEditorProps {
-  categories: Category[];
-  userId: string;
-}
+} from "../ui/form"
+import Tiptap from "../editor/tiptap"
+import Preview from "../editor/preview2"
+import MarkdownEditor from "../editor/markdown-editor"
+import { SimpleFileUpload } from "../general/fileUpload"
+import { usePostMutations } from "@/hooks/usePosts"
 
 // Zod Schema
 const postSchema = z.object({
@@ -45,11 +36,11 @@ const postSchema = z.object({
     .min(1, "Title is required")
     .min(3, "Title must be at least 3 characters")
     .max(200, "Title must be less than 200 characters"),
-  author_name: z
+  author: z
     .string()
     .min(1, "Name is required")
     .min(3, "Name must be at least 3 characters"),
-  author_email: z
+  authorEmail: z
     .string()
     .min(1, { message: "Email is required." })
     .email("This is not a valid email."),
@@ -62,38 +53,37 @@ const postSchema = z.object({
     .string()
     .min(1, "Content is required")
     .min(50, "Content must be at least 50 characters"),
-  featuredImage: z
-    .string()
-    .optional()
-    .refine(
-      (url) => {
-        if (!url || url.trim() === "") return true;
-        try {
-          new URL(url);
-          return true;
-        } catch {
-          return false;
-        }
-      },
-      {
-        message: "Please enter a valid URL",
-      }
-    ),
+  featuredImage: z.string().optional(),
   categories: z
     .array(z.string())
     .min(1, "Please select at least one category")
     .max(5, "You can select up to 5 categories"),
-});
+})
 
-type PostFormData = z.infer<typeof postSchema>;
+type PostFormData = z.infer<typeof postSchema>
 
-export default function PostEditor({ categories, userId }: PostEditorProps) {
-  const [isPending, startTransition] = useTransition();
-  const [activeTab, setActiveTab] = React.useState<
-    "edit" | "preview" | "markdown"
-  >("edit");
-  const router = useRouter();
-  const { toast } = useToast();
+interface Category {
+  slug: string
+  name: string
+}
+
+interface PostEditorProps {
+  categories: Category[]
+}
+
+export default function PostEditor() {
+  const [activeTab, setActiveTab] = React.useState<"edit" | "preview" | "markdown">("edit")
+  const [selectedFile, setSelectedFile] = React.useState<File | null>(null)
+
+
+
+  const router = useRouter()
+  const { toast } = useToast()
+  const convex = useConvex()
+
+  const { createPost } = usePostMutations()
+  const categories = useQuery(api.categories.list)
+
 
   const form = useForm<PostFormData>({
     resolver: zodResolver(postSchema),
@@ -102,89 +92,78 @@ export default function PostEditor({ categories, userId }: PostEditorProps) {
       excerpt: "",
       content: "",
       featuredImage: "",
-      author_name: "",
-      author_email: "",
-
+      author: "",
+      authorEmail: "",
       categories: [],
     },
-    mode: "onChange", // Validate on change for better UX
-  });
+    mode: "onChange",
+  })
 
-  const {
-    handleSubmit,
-    control,
-    watch,
-    setValue,
-    formState: { errors, isValid },
-  } = form;
+  const { handleSubmit, control, watch, setValue, formState: { errors, isValid } } = form
 
-  // Watch content for live preview
-  const watchedContent = watch("content");
-  const watchedCategories = watch("categories");
+  const watchedContent = watch("content")
+  const watchedCategories = watch("categories")
 
-  const handleCategoryToggle = (categoryId: string) => {
-    const currentCategories = watchedCategories;
-    const newCategories = currentCategories.includes(categoryId)
-      ? currentCategories.filter((id) => id !== categoryId)
-      : [...currentCategories, categoryId];
+  // const createPost = useMutation({
+  //   mutationFn: (data: PostFormData & { slug: string }) =>
+  //     convex.mutation(api.posts.create, data),
+  //   onSuccess: () => {
+  //     toast({
+  //       title: "Success!",
+  //       description: "Your post has been submitted for approval",
+  //     })
+  //     form.reset()
+  //     router.push("/blog")
+  //     router.refresh()
+  //   },
+  //   onError: (error) => {
+  //     toast({
+  //       title: "Error",
+  //       description: error instanceof Error ? error.message : "Something went wrong",
+  //       variant: "destructive",
+  //     })
+  //   },
+  // })
+
+  const handleCategoryToggle = (categorySlug: string) => {
+    const currentCategories = watchedCategories
+    const newCategories = currentCategories.includes(categorySlug)
+      ? currentCategories.filter((slug) => slug !== categorySlug)
+      : [...currentCategories, categorySlug]
 
     setValue("categories", newCategories, {
       shouldValidate: true,
       shouldDirty: true,
-    });
-  };
+    })
+  }
 
-  const onSubmit = async (data: PostFormData) => {
-    startTransition(async () => {
-      try {
-        // Create a slug from the title
-        const slug = data.title
-          .toLowerCase()
-          .replace(/[^\w\s]/gi, "")
-          .replace(/\s+/g, "-");
+  const onSubmit = (data: PostFormData) => {
+    const slug = data.title
+      .toLowerCase()
+      .replace(/[^\w\s]/gi, "")
+      .replace(/\s+/g, "-")
 
-        const postData = {
-          ...data,
-          slug,
-        };
-        const { data: response, error } = await createBlogPost(postData);
-
-        if (error) {
-          toast({
-            title: "Error",
-            description: "Something went wrong",
-            variant: "destructive",
-          });
-          return;
-        }
-
-        toast({
-          title: "Success! (Preview Mode)",
-          description: "Your post would be submitted for approval",
-        });
-
-        // Reset form and redirect
-        form.reset();
-        // router.push("/blog");
-        router.refresh();
-      } catch (error) {
-        console.error("Error submitting post:", error);
-        toast({
-          title: "Error",
-          description:
-            error instanceof Error ? error.message : "Something went wrong",
-          variant: "destructive",
-        });
+    createPost.mutate(
+      {
+        ...data,
+        slug,
+        featuredImage: selectedFile,  // Pass the File
+      },
+      {
+        onSuccess: () => {
+          form.reset()
+          setSelectedFile(null)
+          router.push("/blog")
+        },
       }
-    });
-  };
-
+    )
+  }
   const handleContentChange = (newContent: string) => {
     setValue("content", newContent, {
       shouldValidate: true,
       shouldDirty: true,
-    });
-  };
+    })
+  }
 
   return (
     <div className="max-w-4xl mx-auto p-6">
@@ -212,8 +191,7 @@ export default function PostEditor({ categories, userId }: PostEditorProps) {
                   />
                 </FormControl>
                 <FormDescription>
-                  A compelling title helps readers find and engage with your
-                  content
+                  A compelling title helps readers find and engage with your content
                 </FormDescription>
                 <FormMessage />
               </FormItem>
@@ -230,16 +208,13 @@ export default function PostEditor({ categories, userId }: PostEditorProps) {
                 <FormControl>
                   <Textarea
                     placeholder="Write a brief summary that will appear in post previews"
-                    className={`resize-none ${
-                      errors.excerpt ? "border-destructive" : ""
-                    }`}
+                    className={`resize-none ${errors.excerpt ? "border-destructive" : ""}`}
                     rows={3}
                     {...field}
                   />
                 </FormControl>
                 <FormDescription>
-                  This appears in search results and post previews (10-500
-                  characters)
+                  This appears in search results and post previews (10-500 characters)
                 </FormDescription>
                 <FormMessage />
               </FormItem>
@@ -251,19 +226,29 @@ export default function PostEditor({ categories, userId }: PostEditorProps) {
             control={control}
             name="featuredImage"
             render={({ field }) => (
+              // <FormItem>
+              //   <FormLabel>Featured Image URL</FormLabel>
+              //   <FormControl>
+              //     <Input
+              //       placeholder="https://example.com/your-image.jpg"
+              //       {...field}
+              //       className={errors.featuredImage ? "border-destructive" : ""}
+              //     />
+              //   </FormControl>
+              //   <FormDescription>
+              //     Optional: Add a featured image that represents your post
+              //   </FormDescription>
+              //   <FormMessage />
+              // </FormItem>
               <FormItem>
-                <FormLabel>Featured Image URL</FormLabel>
-                <FormControl>
-                  <Input
-                    placeholder="https://example.com/your-image.jpg"
-                    {...field}
-                    className={errors.featuredImage ? "border-destructive" : ""}
-                  />
-                </FormControl>
+                <FormLabel>Featured Image</FormLabel>
                 <FormDescription>
-                  Optional: Add a featured image that represents your post
+                  Upload an image that represents your post
                 </FormDescription>
-                <FormMessage />
+                <SimpleFileUpload
+                  onFileChange={setSelectedFile}
+                  currentFile={selectedFile}
+                />
               </FormItem>
             )}
           />
@@ -279,22 +264,31 @@ export default function PostEditor({ categories, userId }: PostEditorProps) {
                   Select relevant categories for your post (1-5 categories)
                 </FormDescription>
                 <div className="flex flex-wrap gap-2 mt-2">
-                  {categories.map((category) => (
-                    <Button
-                      key={category.id}
-                      type="button"
-                      variant={
-                        watchedCategories.includes(category.slug)
-                          ? "default"
-                          : "outline"
-                      }
-                      size="sm"
-                      onClick={() => handleCategoryToggle(category.slug)}
-                      className="transition-all duration-200"
-                    >
-                      {category.name}
-                    </Button>
-                  ))}
+                  {!categories ? (
+                    // Skeleton loading state
+                    <>
+                      {[1, 2, 3, 4, 5].map((i) => (
+                        <div
+                          key={i}
+                          className="h-9 w-20 rounded-md bg-muted animate-pulse"
+                        />
+                      ))}
+                    </>
+                  ) : (
+                    // Actual categories
+                    categories.map((category) => (
+                      <Button
+                        key={category.slug}
+                        type="button"
+                        variant={watchedCategories.includes(category.slug) ? "default" : "outline"}
+                        size="sm"
+                        onClick={() => handleCategoryToggle(category.slug)}
+                        className="transition-all duration-200 capitalize"
+                      >
+                        {category.name}
+                      </Button>
+                    ))
+                  )}
                 </div>
                 <FormMessage />
               </FormItem>
@@ -305,7 +299,7 @@ export default function PostEditor({ categories, userId }: PostEditorProps) {
             {/* Author Field */}
             <FormField
               control={control}
-              name="author_name"
+              name="author"
               render={({ field }) => (
                 <FormItem className="flex-1">
                   <FormLabel>Name *</FormLabel>
@@ -313,13 +307,9 @@ export default function PostEditor({ categories, userId }: PostEditorProps) {
                     <Input
                       placeholder="Enter your full name"
                       {...field}
-                      className={errors.author_name ? "border-destructive" : ""}
+                      className={errors.author ? "border-destructive" : ""}
                     />
                   </FormControl>
-                  {/* <FormDescription>
-                  A compelling title helps readers find and engage with your
-                  content
-                </FormDescription> */}
                   <FormMessage />
                 </FormItem>
               )}
@@ -328,23 +318,17 @@ export default function PostEditor({ categories, userId }: PostEditorProps) {
             {/* Author Email Field */}
             <FormField
               control={control}
-              name="author_email"
+              name="authorEmail"
               render={({ field }) => (
                 <FormItem className="flex-1">
                   <FormLabel>Email *</FormLabel>
                   <FormControl>
                     <Input
-                      placeholder="Johndoe@examplemail.com"
+                      placeholder="johndoe@example.com"
                       {...field}
-                      className={
-                        errors.author_email ? "border-destructive" : ""
-                      }
+                      className={errors.authorEmail ? "border-destructive" : ""}
                     />
                   </FormControl>
-                  {/* <FormDescription>
-                  A compelling title helps readers find and engage with your
-                  content
-                </FormDescription> */}
                   <FormMessage />
                 </FormItem>
               )}
@@ -359,58 +343,40 @@ export default function PostEditor({ categories, userId }: PostEditorProps) {
               <FormItem>
                 <FormLabel>Content *</FormLabel>
                 <FormDescription>
-                  Write your post content using the rich editor, preview, or
-                  markdown
+                  Write your post content using the rich editor, preview, or markdown
                 </FormDescription>
                 <FormControl>
                   <Tabs
                     value={activeTab}
-                    onValueChange={(value) =>
-                      setActiveTab(value as typeof activeTab)
-                    }
+                    onValueChange={(value) => setActiveTab(value as typeof activeTab)}
                     className="w-full"
                   >
                     <TabsList className="grid grid-cols-3 mb-4">
-                      <TabsTrigger
-                        value="edit"
-                        className="flex items-center gap-2"
-                      >
+                      <TabsTrigger value="edit" className="flex items-center gap-2">
                         <Edit className="h-4 w-4" />
                         Rich Editor
                       </TabsTrigger>
-                      <TabsTrigger
-                        value="preview"
-                        className="flex items-center gap-2"
-                      >
+                      <TabsTrigger value="preview" className="flex items-center gap-2">
                         <Eye className="h-4 w-4" />
                         Preview
                       </TabsTrigger>
-                      <TabsTrigger
-                        value="markdown"
-                        className="flex items-center gap-2"
-                      >
+                      <TabsTrigger value="markdown" className="flex items-center gap-2">
                         <PenSquareIcon className="h-4 w-4" />
                         Markdown
                       </TabsTrigger>
                     </TabsList>
 
-                    <div className="border rounded-lg overflow-y-auto ">
-                      <TabsContent value="edit" className="m-0 h-[600px] ">
-                        <Tiptap
-                          content={watchedContent}
-                          setContent={handleContentChange}
-                        />
+                    <div className="border rounded-lg overflow-y-auto">
+                      <TabsContent value="edit" className="m-0 h-[600px]">
+                        <Tiptap content={watchedContent} setContent={handleContentChange} />
                       </TabsContent>
 
-                      <TabsContent value="preview" className="m-0 h-[500px] ">
+                      <TabsContent value="preview" className="m-0 h-[500px]">
                         <Preview markdown={watchedContent} />
                       </TabsContent>
 
-                      <TabsContent value="markdown" className="m-0 h-[500px] ">
-                        <MarkdownEditor
-                          content={watchedContent}
-                          setContent={handleContentChange}
-                        />
+                      <TabsContent value="markdown" className="m-0 h-[500px]">
+                        <MarkdownEditor content={watchedContent} setContent={handleContentChange} />
                       </TabsContent>
                     </div>
                   </Tabs>
@@ -435,17 +401,17 @@ export default function PostEditor({ categories, userId }: PostEditorProps) {
                 type="button"
                 variant="outline"
                 onClick={() => form.reset()}
-                disabled={isPending}
+                disabled={createPost.isPending}
               >
                 Reset Form
               </Button>
 
               <Button
                 type="submit"
-                disabled={isPending || !isValid}
+                disabled={createPost.isPending || !isValid}
                 className="min-w-[140px]"
               >
-                {isPending ? (
+                {createPost.isPending ? (
                   <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                     Submitting...
@@ -459,8 +425,7 @@ export default function PostEditor({ categories, userId }: PostEditorProps) {
         </form>
       </Form>
     </div>
-  );
+  )
 }
 
-// Export the schema for reuse
-export { postSchema, type PostFormData };
+export { postSchema, type PostFormData }

@@ -2,7 +2,6 @@ import { redirect } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { Plus } from "lucide-react";
-import { getAdmin } from "@/app/actions/auth";
 import DashboardClient from "@/components/dashboard/dashboard-client";
 
 import { auth, currentUser } from "@clerk/nextjs/server";
